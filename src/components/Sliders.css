@@ -1,0 +1,7 @@
+.BottomLabel {
+    transform: translateX(-50%) scale(1, 1)
+}
+
+.TopLabel {
+    transform: translateX(-50%) translateY(-220%) scale(1, 1)
+}
