@@ -1,15 +1,47 @@
 import './App.css';
 import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import Button from '@mui/material/Button';
+// import Tabs from '@mui/material/Tabs';
+// import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import QuestionForm from './prototypes/QuestionForm';
 import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Instructions from './prototypes/Instructions';
+import Toolbar from '@mui/material/Toolbar';
 
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#42a4f5',
+    },
+    secondary: {
+      main: '#ff4081',
+    },
+    "question-prompt": {
+      main: '#0072B2',
+    },
+    "answer-prompt": {
+      main: '#aa00d5',
+    },
+    "explanation-prompt": {
+      main: '#008d4b',
+    },
+    "yesb": {
+      main: '#42a4f5',
+      secondary: '#0072B2',
+      thirdary: '#005f8c',
+      fourthary: '#004c66',
+    },
+    alerting: {
+      main: '#ff0000',
+    },
+    white: {
+      main: '#ffffff',
+    },
+  },
   typography: {
     prevRead: {
       fontWeight: 'normal',
@@ -75,6 +107,38 @@ function CustomTabPanel(props) {
 }
 
 
+function ButtonAppBar(props) {
+  const { pageIdxSetter } = props;
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{
+            flexGrow: 1,
+            color: theme.palette.white.main,
+          }}>
+            HIT
+          </Typography>
+          <Button sx={{
+            color: theme.palette.white.main,
+            '&:hover': {
+              backgroundColor: theme.palette.yesb.secondary,
+            }
+          }} onClick={(event) => pageIdxSetter(0)}>Instruction</Button>
+          <Button sx={{
+            color: theme.palette.white.main,
+            '&:hover': {
+              backgroundColor: theme.palette.yesb.secondary,
+            }
+          }} onClick={(event) => pageIdxSetter(1)}>Question</Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  )
+}
+
+
 function App() {
 
   // uncomment this for debugging
@@ -119,7 +183,8 @@ function App() {
   //   document.getElementById('payload-read').innerHTML
   // );
 
-  const [tabValue, setTabValue] = useState(0);
+  // const [tabValue, setTabValue] = useState(0);
+  const [pageIdx, setPageIdx] = useState(0);
   const [currentValues, setCurrentValues] = useState(Array(payload.blocks.length).fill(0));
   const [currentScaledValues, setCurrentScaledValues] = useState(Array(payload.blocks.length).fill(0));
   // Use this set of values to track whether this part of the question had been set
@@ -135,40 +200,35 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Instructions" {...allyProps(0)} />
-            <Tab label="Questions" {...allyProps(1)} />
-          </Tabs>
+      <ButtonAppBar pageIdxSetter={setPageIdx} />
+        <Box sx={{paddingTop: "100px", display: "flex", flexDirection: "row", flexWrap: "wraps", alignItems: "stretch", justifyContent: "center" }}>
+          {pageIdx === 0 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
+            <Instructions />
+          </Box>}
+          {pageIdx === 1 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
+            <QuestionForm
+              payload={payload}
+              currentValues={currentValues}
+              currentValuesSetter={setCurrentValues}
+              currentScaledValues={currentScaledValues}
+              currentScaledValuesSetter={setCurrentScaledValues}
+              currentBlockId={currentBlockId}
+              currentBlockIdSetter={setCurrentBlockId}
+              currentHaveBeenSet={currentHaveBeenSet}
+              currentHaveBeenSetSetter={setCurrentHaveBeenSet}
+              currentDefault={currentDefault}
+              currentDefaultSetter={setCurrentDefault}
+              questionValid={questionValid}
+              questionValidSetter={setQuestionValid}
+              commitLog={commitLog}
+              commitLogSetter={setCommitLog}
+            />
+            <input type="hidden" id="position" name="position" value={JSON.stringify(currentValues)} />
+            <input type="hidden" id="scaled" name="scaled" value={JSON.stringify(currentScaledValues)} />
+            <input type="hidden" id="question-valid" name="question-valid" value={JSON.stringify(questionValid)} />
+            <input type="hidden" id="commit-log" name="commit-log" value={JSON.stringify(commitLog)} />
+          </Box>}
         </Box>
-        <CustomTabPanel value={tabValue} index={0} key="instruction">
-          <Instructions />
-        </CustomTabPanel>
-        <CustomTabPanel value={tabValue} index={1} key="question-form">
-          <QuestionForm
-            payload={payload}
-            currentValues={currentValues}
-            currentValuesSetter={setCurrentValues}
-            currentScaledValues={currentScaledValues}
-            currentScaledValuesSetter={setCurrentScaledValues}
-            currentBlockId={currentBlockId}
-            currentBlockIdSetter={setCurrentBlockId}
-            currentHaveBeenSet={currentHaveBeenSet}
-            currentHaveBeenSetSetter={setCurrentHaveBeenSet}
-            currentDefault={currentDefault}
-            currentDefaultSetter={setCurrentDefault}
-            questionValid={questionValid}
-            questionValidSetter={setQuestionValid}
-            commitLog={commitLog}
-            commitLogSetter={setCommitLog}
-          />
-          <input type="hidden" id="position" name="position" value={JSON.stringify(currentValues)} />
-          <input type="hidden" id="scaled" name="scaled" value={JSON.stringify(currentScaledValues)} />
-          <input type="hidden" id="question-valid" name="question-valid" value={JSON.stringify(questionValid)} />
-          <input type="hidden" id="commit-log" name="commit-log" value={JSON.stringify(commitLog)} />
-        </CustomTabPanel>
-      </Box>
     </ThemeProvider>
   );
 }
