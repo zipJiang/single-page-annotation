@@ -1,15 +1,12 @@
 import './App.css';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
-// import Tabs from '@mui/material/Tabs';
-// import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import QuestionForm from './prototypes/QuestionForm';
 import Typography from '@mui/material/Typography';
-import AppBar from '@mui/material/AppBar';
+import { AppBar, Toolbar } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Instructions from './prototypes/Instructions';
-import Toolbar from '@mui/material/Toolbar';
 
 
 const theme = createTheme({
@@ -185,12 +182,15 @@ function App() {
 
   // const [tabValue, setTabValue] = useState(0);
   const [pageIdx, setPageIdx] = useState(0);
+
+  // Thus we explicitly set the mapping between the 
+  // currentValues and the current Scaled Values
   const [currentValues, setCurrentValues] = useState(Array(payload.blocks.length).fill(0));
   const [currentScaledValues, setCurrentScaledValues] = useState(Array(payload.blocks.length).fill(0));
   // Use this set of values to track whether this part of the question had been set
   const [currentHaveBeenSet, setCurrentHaveBeenSet] = useState(Array(payload.blocks.length).fill(false)); 
   const [currentBlockId, setCurrentBlockId] = useState(0);
-  const [currentDefault, setCurrentDefault] = useState(2500);
+  const [currentDefault, setCurrentDefault] = useState(5000);
   const [questionValid, setQuestionValid] = useState(true);
   const [commitLog, setCommitLog] = useState([]);
 
@@ -201,34 +201,34 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <ButtonAppBar pageIdxSetter={setPageIdx} />
-        <Box sx={{paddingTop: "100px", display: "flex", flexDirection: "row", flexWrap: "wraps", alignItems: "stretch", justifyContent: "center" }}>
-          {pageIdx === 0 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
-            <Instructions />
-          </Box>}
-          {pageIdx === 1 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
-            <QuestionForm
-              payload={payload}
-              currentValues={currentValues}
-              currentValuesSetter={setCurrentValues}
-              currentScaledValues={currentScaledValues}
-              currentScaledValuesSetter={setCurrentScaledValues}
-              currentBlockId={currentBlockId}
-              currentBlockIdSetter={setCurrentBlockId}
-              currentHaveBeenSet={currentHaveBeenSet}
-              currentHaveBeenSetSetter={setCurrentHaveBeenSet}
-              currentDefault={currentDefault}
-              currentDefaultSetter={setCurrentDefault}
-              questionValid={questionValid}
-              questionValidSetter={setQuestionValid}
-              commitLog={commitLog}
-              commitLogSetter={setCommitLog}
-            />
-            <input type="hidden" id="position" name="position" value={JSON.stringify(currentValues)} />
-            <input type="hidden" id="scaled" name="scaled" value={JSON.stringify(currentScaledValues)} />
-            <input type="hidden" id="question-valid" name="question-valid" value={JSON.stringify(questionValid)} />
-            <input type="hidden" id="commit-log" name="commit-log" value={JSON.stringify(commitLog)} />
-          </Box>}
-        </Box>
+      <Box sx={{paddingTop: "100px", display: "flex", flexDirection: "row", flexWrap: "wraps", alignItems: "stretch", justifyContent: "center", width: "100%"}}>
+        {pageIdx === 0 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
+          <Instructions />
+        </Box>}
+        {pageIdx === 1 && <Box paddingLeft="10px" paddingRight="10px" maxWidth="1024px" order={0}>
+          <QuestionForm
+            payload={payload}
+            currentValues={currentValues}
+            currentValuesSetter={setCurrentValues}
+            currentScaledValues={currentScaledValues}
+            currentScaledValuesSetter={setCurrentScaledValues}
+            currentBlockId={currentBlockId}
+            currentBlockIdSetter={setCurrentBlockId}
+            currentHaveBeenSet={currentHaveBeenSet}
+            currentHaveBeenSetSetter={setCurrentHaveBeenSet}
+            currentDefault={currentDefault}
+            currentDefaultSetter={setCurrentDefault}
+            questionValid={questionValid}
+            questionValidSetter={setQuestionValid}
+            commitLog={commitLog}
+            commitLogSetter={setCommitLog}
+          />
+          <input type="hidden" id="position" name="position" value={JSON.stringify(currentValues)} />
+          <input type="hidden" id="scaled" name="scaled" value={JSON.stringify(currentScaledValues)} />
+          <input type="hidden" id="question-valid" name="question-valid" value={JSON.stringify(questionValid)} />
+          <input type="hidden" id="commit-log" name="commit-log" value={JSON.stringify(commitLog)} />
+        </Box>}
+      </Box>
     </ThemeProvider>
   );
 }

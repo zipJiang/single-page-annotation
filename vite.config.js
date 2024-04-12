@@ -7,11 +7,17 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 export default defineConfig({
   plugins: [
     react(),
-    babel({
-      babelHelpers: 'bundled',
-      plugins: ['@babel/plugin-transform-template-literals'],
-      extensions: [".js", ".jsx", ".ts", ".tsx"],
-    }),
-    viteSingleFile(),
+    {
+      ...babel({
+        babelHelpers: 'bundled',
+        plugins: ['@babel/plugin-transform-template-literals'],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      }),
+      apply: 'build',
+    },
+    {
+      ...viteSingleFile(),
+      apply: 'build',
+    }
   ],
 })

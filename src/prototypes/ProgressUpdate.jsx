@@ -17,7 +17,7 @@ function ProgressUpdate(props) {
     } = props;
 
     // TODO: Create the data tab that can be applied.
-    const registeredValuesExtended = [2500, ...registeredValues];
+    const registeredValuesExtended = [0, ...registeredValues];
 
     const data = [
         {
@@ -35,11 +35,18 @@ function ProgressUpdate(props) {
     // TODO: Use the 
     const MyResponsiveLine = ({ data }) => (
         <ResponsiveLine
+            areaBaselineValue={0}
+            areaBlendMode={"normal"}
+            areaOpacity={0.2}
+            enableArea={false}
+            enablePoints={true}
+            enablePointLabel={true}
+            pointLabel={"yFormatted"}
             data={data}
             curve={"cardinal"}
             margin={{ top: 50, right: 50, bottom: 10, left: 50 }}
             xScale={{ type: 'linear', min: 0, max: numSteps, stacked: false, reverse: false }}
-            yScale={{ type: 'linear', min: 0, max: 1, stacked: false, reverse: false }}
+            yScale={{ type: 'linear', min: -1.2, max: 1.2, stacked: false, reverse: false }}
             yFormat=" >-.2f"
             tooltip={({ point }) => {
                 return (
@@ -61,6 +68,18 @@ function ProgressUpdate(props) {
                     </Box>
                 )
             }}
+            layers={['grid', 'markers', 'axes', 'areas', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends']}
+            legends={[]}
+            lineWidth={2}
+            sliceTooltip={({ slice }) => {}}
+            fill={[]}
+            defs={[]}
+            role="img"
+            enableCrosshair={false}
+            enableSlices={false}
+            crosshairType={"bottom-right"}
+            debugSlices={false}
+            debugMesh={false}
             onClick={(point) => {
                 const newStepId = point.data.x;
                 if (newStepId == 0) {
@@ -85,7 +104,6 @@ function ProgressUpdate(props) {
             animate={false}
             isInteractive={true}
             colors={d => d.color}
-            enablePointLabel={false}
         />
     )
 

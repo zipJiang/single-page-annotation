@@ -1,13 +1,10 @@
 import DocumentViewer from './DocumentViewer';
 import QuestionCard from './QuestionCard';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
 import { Box } from '@mui/material';
 import { EmphCard } from '../components/Cards';
 import ProgressUpdate from './ProgressUpdate';
-import { logitScale } from '../components/Sliders';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -58,7 +55,7 @@ function QuestionForm(props) {
         </EmphCard>
     );
 
-    const linear = (x) => x;
+    const linear = (x) => 2 * (x - 5000);
     // console.log(currentHaveBeenSet);
 
     if (questionValid && currentBlockId < payload.blocks.length) {

@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import { TextField } from '@mui/material';
-import { ConstructionOutlined } from '@mui/icons-material';
 
 
 function QuestionCard(props) {
@@ -38,17 +37,17 @@ function QuestionCard(props) {
     const levalOfSupportFormat = (num) => {
         // return "P = " + (num * 100).toFixed(2) + "%";
         let text = "Uninformative";
-        if (num < 1250) {
-            text = "\u2248Contradicted";
+        if (num < 1250 - 5000) {
+            text = "\u2248 Contradicted";
         }
-        else if (num >= 1250 && num < 3750) {
-            text = "\u2248 Uninformative";
+        else if (num >= 1250 - 5000 && num < 3750 - 5000) {
+            text = "\u2248 Mildly Contradicted";
         }
-        else if (num >= 3750 && num < 6250) {
-            text =  "\u2248 Suggested";
+        else if (num >= 3750 - 5000 && num < 6250 - 5000) {
+            text =  "\u2248 Uninformative";
         }
-        else if (num >= 6250 && num < 8750) {
-            text =  "\u2248 Partially Supported";
+        else if (num >= 6250 - 5000 && num < 8750 - 5000) {
+            text =  "\u2248 Mildly Supported";
         }
         else {
             text =  "\u2248 Fully Supported";
@@ -87,15 +86,15 @@ function QuestionCard(props) {
                         },
                         {
                             value: 2500,
-                            label: <div className="TopLabel">Uninformative</div>
+                            label: <div className="TopLabel">Mildly Contradicted</div>
                         },
                         {
                             value: 5000,
-                            label: <div className="BottomLabel">Suggested</div>
+                            label: <div className="BottomLabel">Uninformative</div>
                         },
                         {
                             value: 7500,
-                            label: <div className="TopLabel">Partially Supported</div>
+                            label: <div className="TopLabel">Mildly Supported</div>
                         },
                         {
                             value: 10000,
@@ -105,11 +104,13 @@ function QuestionCard(props) {
                     valueLabelFormat={levalOfSupportFormat}
                     disabled={disabled}
                 />
-                <FormGroup>
-                    <FormControlLabel control={
-                        <Checkbox checked={!questionValid} onChange={(e) => questionValidSetter(!e.target.checked)} disabled={disabled} />
-                    } label="Nonsensical / Unreadable"/>
-                </FormGroup>
+                <Box sx={{paddingTop: "10px", maxWidth: "40%"}}>
+                    <FormGroup>
+                        <FormControlLabel control={
+                            <Checkbox checked={!questionValid} onChange={(e) => questionValidSetter(!e.target.checked)} disabled={disabled} />
+                        } label="Nonsensical / Unreadable"/>
+                    </FormGroup>
+                </Box>
                 {needExplanation && <Box sx={{textAlign: "center", width: "90%", padding: "10px"}}>
                     <TextField 
                         label="Reason for Modification (Required)"
