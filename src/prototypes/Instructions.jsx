@@ -13,7 +13,11 @@ import DocumentViewer from "./DocumentViewer";
 import QuestionCard from "./QuestionCard";
 
 
-export default function Instructions() {
+export default function Instructions(props) {
+
+    const { theme } = props;
+
+    const linear = (x) => 2 * (x - 5000);
     const pseudoPayload = [
         {
             blocks: [
@@ -62,6 +66,46 @@ export default function Instructions() {
             // question: "In which country was Jean-Marc Vacheron born?",
             // answer: "Switzerland"
             claim: "Jean-Marc Vacheron was born in Switzerland."
+        },
+        {
+            blocks: [
+                [   
+                    {content: "Article #1", highlight: false},
+                    {content: "It is hard to find clear defining features that separate them, but moths tend to have feather-like antennae, while butterflies have club-shaped antennae.", highlight: false},
+                    {content: "While we wouldn’t say that moths are a type of butterfly, there are a great deal more of them than there are butterflies, with over 160,000 moth species globally, and only around 18,000 butterflies.", highlight: true},
+                    {content: "If anything, we would have to say that butterflies are a type of moth", highlight: true},
+                    {content: "There are greater number of moth species than butterfly species.", highlight: true},
+                ],
+                [
+                    {content: "Article #2", highlight: false},
+                    {content: "Now name a type of moth", highlight: true},
+                    {content: "Stumped?", highlight: false},
+                    {content: "That might be because butterflies, and especially planting for butterflies, captivates our attention.", highlight: false},
+                    {content: "I mean, who ever heard of a moth garden?", highlight: false},
+                    {content: "But there are actually 160,000 known species of moths vs. 17,500 species of butterflies.", highlight: false},
+                ]
+            ],
+            claim: "Butterflies are a type of moth."
+        },
+        {
+            blocks: [
+                [
+                    {content: "ARG0:", highlight: false},
+                    {content: "Selling arms to Taiwan is good.", highlight: true},
+                ],
+                [
+                    {content: "ARG1:", highlight: false},
+                    {content: "There's no reason why we shouldn't sell arms to Taiwan.", highlight: true},
+                ],
+                [
+                    {content: "ARG2:", highlight: false},
+                    {content: "Selling weapons to Taiwan by the United States can be detrimental in several ways.", highlight: true},
+                    {content: "Firstly, it might exacerbate tensions between the U.S. and China, as China views Taiwan as a part of its territory and opposes any form of military support to it.", highlight: true},
+                    {content: "This could lead to diplomatic strains and potentially destabilize the broader Asia-Pacific region.", highlight: false},
+                    {content: "Furthermore, such sales could provoke China into taking retaliatory measures, including economic sanctions or military posturing, which could negatively impact global markets and increase regional security risks.", highlight: false},
+                ]
+            ],
+            claim: "The United States should sell arms to Taiwan."
         }
     ]
     return (
@@ -141,6 +185,7 @@ export default function Instructions() {
                     payload={pseudoPayload[0]}
                     currentBlockId={0}
                     disabled={true}
+                    highlightColor={theme.palette.highlight.main}
                 />
                 <QuestionCard
                     claim={pseudoPayload[0].claim}
@@ -153,7 +198,7 @@ export default function Instructions() {
                     needExplanation={false}
                     commitLog={[]}
                     commitLogSetter={() => {}}
-                    scaleFunc={(x) => x}
+                    scaleFunc={linear}
                     disabled={true}
                 />
             </Box>
@@ -166,19 +211,20 @@ export default function Instructions() {
                     payload={pseudoPayload[1]}
                     currentBlockId={1}
                     disabled={true}
+                    highlightColor={theme.palette.highlight.main}
                 />
                 <QuestionCard
                     claim={pseudoPayload[1].claim}
                     currentBlockId={1}
                     currentBlockIdSetter={() => {}}
                     currentValueSetter={() => {}}
-                    defaultValue={3503}
+                    defaultValue={6752}
                     questionValid={true}
                     questionValidSetter={() => {}}
                     needExplanation={false}
                     commitLog={[]}
                     commitLogSetter={() => {}}
-                    scaleFunc={(x) => x}
+                    scaleFunc={linear}
                     disabled={true}
                 />
             </Box>
@@ -191,20 +237,73 @@ export default function Instructions() {
                     payload={pseudoPayload[2]}
                     currentBlockId={0}
                     disabled={true}
+                    highlightColor={theme.palette.highlight.main}
                 />
                 <QuestionCard
                     claim={pseudoPayload[2].claim}
                     currentBlockId={0}
                     currentBlockIdSetter={() => {}}
-                    defaultValue={2500}
+                    defaultValue={5000}
                     questionValid={true}
                     questionValidSetter={() => {}}
                     needExplanation={false}
                     commitLog={[]}
                     commitLogSetter={() => {}}
-                    scaleFunc={(x) => x}
+                    scaleFunc={linear}
                     disabled={true}
                 />
+            </Box>
+            <Divider variant="middle" textAlign="center" sx={{borderWidth: "3px"}}>
+                <Chip label={"Example 4"}/>
+            </Divider>
+            <Box sx={{padding: "10px"}}>
+                <Typography variant="prompt">It is important to realize that some of the documents combine information from various sources, and it is possible that these information may repeat each other, or in some cases, contradicts what was just presented in previous chunks. In these cases,</Typography> <Typography variant='highlightPrompt'>please consider how the new information in each chunk interact with previous information presented in the document.</Typography><Typography variant="prompt"> For example, in the following example, the new information almost repeat what has already been discussed. In this case, you should not increase your score based on this evidence.</Typography>
+                <DocumentViewer
+                    payload={pseudoPayload[3]}
+                    currentBlockId={1}
+                    disabled={true}
+                    highlightColor={theme.palette.highlight.main}
+                />
+                <QuestionCard
+                    claim={pseudoPayload[3].claim}
+                    currentBlockId={1}
+                    currentBlockIdSetter={() => {}}
+                    defaultValue={6125}
+                    questionValid={true}
+                    questionValidSetter={() => {}}
+                    needExplanation={false}
+                    commitLog={[]}
+                    commitLogSetter={() => {}}
+                    scaleFunc={linear}
+                    disabled={true}
+                />
+                <Typography variant="prompt"> While <Typography variant="italicPrompt">Article #2</Typography> seems to argue against that butterflies are a type of moth, but the evidence they provides have already been seen in <Typography variant="italicPrompt" >Article #1</Typography>. However, article one seems to be gruding that butterflies are arguable a type of moth, we still mark somewhere around "Uninformative" after reading <Typography variant="italicPrompt">Article #2</Typography>, while slightly in favor of the claim.</Typography>
+            </Box>
+            <Divider variant="middle" textAlign="center" sx={{borderWidth: "3px"}}>
+                <Chip label={"Example 5"}/>
+            </Divider>
+            <Box sx={{padding: "10px"}}>
+                <Typography variant="prompt">When presented with contradicting evidence, try to annotate according to the quality of the evidence. For example, A stronger and more extensive argument that properly address the other stance's concerns should strongly support the stance that argument is for.</Typography>
+                <DocumentViewer
+                    payload={pseudoPayload[4]}
+                    currentBlockId={2}
+                    disabled={true}
+                    highlightColor={theme.palette.highlight.main}
+                />
+                <QuestionCard
+                    claim={pseudoPayload[4].claim}
+                    currentBlockId={2}
+                    currentBlockIdSetter={() => {}}
+                    defaultValue={2000}
+                    questionValid={true}
+                    questionValidSetter={() => {}}
+                    needExplanation={false}
+                    commitLog={[]}
+                    commitLogSetter={() => {}}
+                    scaleFunc={linear}
+                    disabled={true}
+                />
+                <Typography variant="prompt">We observe that while <Typography variant="italicPrompt">ARG0</Typography> and <Typography variant="italicPrompt">ARG1</Typography> are just unsupported opinions, <Typography variant="italicPrompt">ARG2</Typography> gives reasonable support and present proper counter-argument to the questions presented in the previous arguments. Thus when taking these three arguments into account together, we prefer the stance of <Typography variant="italicPrompt">ARG2</Typography></Typography>
             </Box>
         </Box>
     )

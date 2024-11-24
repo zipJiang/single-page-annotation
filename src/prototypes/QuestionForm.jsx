@@ -12,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 function QuestionForm(props) {
     const {
+        theme,
         payload,
         currentValues,
         currentValuesSetter,
@@ -95,12 +96,15 @@ function QuestionForm(props) {
         );
     }
 
+    console.log(theme.palette.highlight.main);
+
     return (
         <Box>
-            <DocumentViewer payload={payload} currentBlockId={currentBlockId} />
+            <DocumentViewer payload={payload} currentBlockId={currentBlockId} highlightColor={theme.palette.highlight.main} />
             {/* <ProgressBar progress={currentBlockId} numSteps={payload.blocks.length} /> */}
             {conditionalComponent}
             <ProgressUpdate
+                theme={theme}
                 blocks={payload.blocks}
                 progress={currentBlockId}
                 numSteps={payload.blocks.length}

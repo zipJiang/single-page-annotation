@@ -112,14 +112,15 @@ function MarkLabelComponent(props) {
 }
 
 
-const MySliderMark = styled(SliderMark)({
-    transform: "translate(-1px, -50%) scale(3)"
-})
+const MySliderMark = styled(SliderMark)(({ theme }) => ({
+    transform: "translate(-1px, -50%) scale(3)",
+    color: theme.palette.primary.main,
+}));
 
 
 // Create out own slider component
-const MySlider = styled(Slider)({
-  color: '#1976d2',
+const MySlider = styled(Slider)(({ theme }) => ({
+  color: theme.palette.primary.main,
   height: 8,
   '& .MuiSlider-track': {
     border: 'none',
@@ -139,12 +140,12 @@ const MySlider = styled(Slider)({
   '& .MuiSlider-valueLabel': {
     lineHeight: 1.2,
     fontSize: 20,
-    backgroundColor: '#1976d2',
+    backgroundColor: theme.palette.primary.main,
   },
   '& .MuiSlider-mark': {
     tranform: "translate(-1px, -50%) scale(3)",
   }
-});
+}));
 
 
 const markers = [

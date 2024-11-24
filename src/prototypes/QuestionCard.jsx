@@ -37,16 +37,16 @@ function QuestionCard(props) {
     const levalOfSupportFormat = (num) => {
         // return "P = " + (num * 100).toFixed(2) + "%";
         let text = "Uninformative";
-        if (num < 1250 - 5000) {
+        if (num < 2 * (1250 - 5000)) {
             text = "\u2248 Contradicted";
         }
-        else if (num >= 1250 - 5000 && num < 3750 - 5000) {
+        else if (num >= 2 * (1250 - 5000) && num < 2 * (3750 - 5000)) {
             text = "\u2248 Mildly Contradicted";
         }
-        else if (num >= 3750 - 5000 && num < 6250 - 5000) {
+        else if (num >= 2 * (3750 - 5000) && num < 2 * (6250 - 5000)) {
             text =  "\u2248 Uninformative";
         }
-        else if (num >= 6250 - 5000 && num < 8750 - 5000) {
+        else if (num >= 2 * (6250 - 5000) && num < 2 * (8750 - 5000)) {
             text =  "\u2248 Mildly Supported";
         }
         else {
@@ -66,7 +66,7 @@ function QuestionCard(props) {
     return (
         <EmphCard>
             <Typography variant="prompt" component="div">
-                Reading till this point with the additional information presented in the bolded section, what's your current confidence in the given claim?
+                What's your estimation of an <Typography variant='italicPrompt' component='span'>initially unbiased observer's</Typography> belief in the given claim, reading till this point with the additional information presented in the bolded section?
             </Typography>
             <Typography variant="question" component="div" sx={{ fontWeight: 'bold' }}>
                 Claim: {claim}
@@ -142,7 +142,7 @@ function QuestionCard(props) {
                         }}
                         disabled={disabled}
                     >
-                        Commit
+                        <Typography variant="buttonText">Commit</Typography>
                     </Button>
                 </Box>
             </Box>

@@ -7,12 +7,12 @@ import { applyProps } from './utils';
 // the input instances.
 
 const EmphCard = applyProps(
-    styled(Card)({
+    styled(Card)(({ theme }) => ({
         margin: "15px",
         padding: "20px",
         borderRadius: "10px",
-        backgroundColor: "#b3e5fc"
-    }),
+        backgroundColor: theme.palette["card-bg-emph"].main
+    })),
     { elevation: 5 }
 );
 

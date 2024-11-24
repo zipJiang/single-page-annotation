@@ -8,6 +8,7 @@ import { Divider } from "@mui/material";
 
 function ProgressUpdate(props) {
     const {
+        theme,
         blocks,
         numSteps,
         registeredValues,
@@ -19,10 +20,12 @@ function ProgressUpdate(props) {
     // TODO: Create the data tab that can be applied.
     const registeredValuesExtended = [0, ...registeredValues];
 
+    console.log(theme.palette.secondary.main);
+
     const data = [
         {
             "id": "P (pos)",
-            "color": "#b3e5fc",
+            "color": theme.palette.secondary.main,
             "data": registeredValuesExtended.map((v, i) => {
                 return {
                     "x": i,
@@ -43,6 +46,7 @@ function ProgressUpdate(props) {
             enablePointLabel={true}
             pointLabel={"yFormatted"}
             data={data}
+            theme={{text: {fill: theme.palette.text.primary}}}
             curve={"cardinal"}
             margin={{ top: 50, right: 50, bottom: 10, left: 50 }}
             xScale={{ type: 'linear', min: 0, max: numSteps, stacked: false, reverse: false }}
@@ -52,7 +56,7 @@ function ProgressUpdate(props) {
                 return (
                     <Box
                         style={{
-                            background: 'white',
+                            background: theme.palette.white.main,
                             padding: '9px 12px',
                             border: '1px solid #ccc',
                             maxWidth: '100px',
@@ -94,9 +98,9 @@ function ProgressUpdate(props) {
             axisBottom={null}
             axisLeft={null}
             pointSize={20}
-            pointColor="#b3e5fc"
+            pointColor={theme.palette.secondary.main}
             pointBorderWidth={2}
-            pointBorderColor="#b3e5fc"
+            pointBorderColor={theme.palette.secondary.main}
             pointLabelYOffset={-20}
             useMesh={true}
             enableGridX={false}

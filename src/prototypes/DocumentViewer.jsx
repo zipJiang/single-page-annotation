@@ -5,7 +5,7 @@ import TextBlock from "./TextBlock";
 import { NormalCard } from "../components/Cards";
 
 function DocumentViewer(props) {
-    const { currentBlockId, payload, disabled = false } = props;
+    const { currentBlockId, payload, highlightColor, disabled = false } = props;
     const blocks = payload['blocks'];
 
     const currentReadingRef = useRef(null);
@@ -32,6 +32,7 @@ function DocumentViewer(props) {
                         sentences={block}
                         currentReading={currentBlockId === index}
                         forwardRef={currentBlockId === index ? currentReadingRef : null} 
+                        highlightColor={highlightColor}
                     />)}
                 </Box>
             </NormalCard>

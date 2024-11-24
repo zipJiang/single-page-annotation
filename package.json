@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-react": "^7.24.1",
     "@dnd-kit/core": "^6.1.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
