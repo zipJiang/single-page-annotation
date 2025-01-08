@@ -8,7 +8,7 @@ import { applyProps } from './utils';
 
 const EmphCard = applyProps(
     styled(Card)(({ theme }) => ({
-        margin: "15px",
+        margin: "5px",
         padding: "20px",
         borderRadius: "10px",
         backgroundColor: theme.palette["card-bg-emph"].main

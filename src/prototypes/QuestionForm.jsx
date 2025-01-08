@@ -1,118 +1,80 @@
-import DocumentViewer from './DocumentViewer';
+import React, { useState } from 'react';
+import AbstractViewer from './AbstractViewer';
 import QuestionCard from './QuestionCard';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Switch from '@mui/material/Switch';
 import { EmphCard } from '../components/Cards';
-import ProgressUpdate from './ProgressUpdate';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import ReviewerViewer from './ReviewViewer';
 
 
 function QuestionForm(props) {
     const {
         theme,
         payload,
-        currentValues,
-        currentValuesSetter,
-        currentScaledValues,
-        currentScaledValuesSetter,
-        currentHaveBeenSet,
-        currentHaveBeenSetSetter,
-        currentBlockId,
-        currentBlockIdSetter,
-        currentDefault,
-        currentDefaultSetter,
-        questionValid,
-        questionValidSetter,
-        commitLog,
-        commitLogSetter,
-        disabled = false,
+        ratings,
+        setRatings
     } = props;
 
-    let conditionalComponent = (
-        <EmphCard>
-            <Typography variant="prompt" component="div">
-                You have completed the question. Click the button below to submit your answers.
-            </Typography>
-            <Typography variant="highlightPrompt" component="div">
-                Note: You can still resume annotation by unselecting "Nonsensical / Unreadable" or clicking on circle in the progress panel.
-            </Typography>
-            <FormGroup>
-                <FormControlLabel control={
-                    <Checkbox checked={!questionValid} onChange={(e) => questionValidSetter(!e.target.checked)} />
-                } label="This question answer pair does not make sense or the document is unreadable."/>
-            </FormGroup>
-            <Box sx={{textAlign: "center"}}>
-                <Button
-                    variant="contained"
-                    type="submit"
-                    sx={{margin: "10px"}}
-                >
-                    Submit
-                </Button>
-            </Box>
-        </EmphCard>
-    );
-
-    const linear = (x) => 2 * (x - 5000);
-    // console.log(currentHaveBeenSet);
-
-    if (questionValid && currentBlockId < payload.blocks.length) {
-        conditionalComponent = (
-            <QuestionCard
-                claim={payload.claim}
-                key={`question-card-${currentBlockId}`}
-                currentBlockId={currentBlockId}
-                currentBlockIdSetter={currentBlockIdSetter}
-                currentValueSetter={(v) => {
-                    let newValues = [...currentValues];
-                    let newScaledValues = [...currentScaledValues];
-                    let newHaveBeenSet = [...currentHaveBeenSet];
-                    newValues[currentBlockId] = v;
-                    newScaledValues[currentBlockId] = linear(v);
-                    newHaveBeenSet[currentBlockId] = true;
-                    // all haveBeenSet after the currentBlockId should be false,
-                    // as new annotations should be made for the updated settings.
-                    for (let i = currentBlockId + 1; i < payload.blocks.length; i++) {
-                        newHaveBeenSet[i] = false;
-                    }
-
-                    currentValuesSetter(newValues);
-                    currentScaledValuesSetter(newScaledValues);
-                    currentHaveBeenSetSetter(newHaveBeenSet);
-                    currentDefaultSetter(v);
-                }}
-                defaultValue={currentDefault}
-                questionValid={questionValid}
-                questionValidSetter={questionValidSetter}
-                needExplanation={currentHaveBeenSet[currentBlockId]}
-                commitLog={commitLog}
-                commitLogSetter={commitLogSetter}
-                scaleFunc={linear}
-                disabled={disabled}
-            />
-        );
-    }
-
-    console.log(theme.palette.highlight.main);
+    const [gptChecked, setGptChecked] = useState(false);
+    const handleChange = (event) => {
+        setGptChecked(event.target.checked);
+      };
 
     return (
-        <Box>
-            <DocumentViewer payload={payload} currentBlockId={currentBlockId} highlightColor={theme.palette.highlight.main} />
-            {/* <ProgressBar progress={currentBlockId} numSteps={payload.blocks.length} /> */}
-            {conditionalComponent}
-            <ProgressUpdate
-                theme={theme}
-                blocks={payload.blocks}
-                progress={currentBlockId}
-                numSteps={payload.blocks.length}
-                registeredValues={currentScaledValues.slice(0, currentBlockId)}
-                currentBlockIdSetter={currentBlockIdSetter}
-                currentValues={currentValues}
-                currentDefaultSetter={currentDefaultSetter}
-            />
+        <Box sx={{
+        }}>
+            <Grid container spacing={2}>
+                <Grid item xs={5}>
+                    <AbstractViewer payload={payload} />
+                    <Box sx={{
+                        margin: 0,
+                        padding: 0,
+                        height: "10vh",
+                        textAlign: "center",
+                    }}>
+                        <Box sx={{marginTop: "10px", padding: "0px", display: "flex", justifyContent: "space-around"}}>
+                            <Box sx={{
+                                order: 1,
+                            }}>
+                            <Button
+                                type="button"
+                                variant='contained' color='primary'
+                                onClick={() => window.open("https://" + payload.pdf, '_blank')}
+                            >
+                                <Typography variant='h6'>
+                                    Show pdf
+                                </Typography>
+                            </Button>
+                            </Box>
+                            <Box sx={{
+                                order: 2,
+                            }}>
+                                <FormControlLabel label="GPT" control={
+                                    <Switch checked={gptChecked} onChange={handleChange} inputProps={
+                                        { 'aria-label': 'gpt-controlled' }
+                                    } />
+                                } />
+                            </Box>
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item xs={7}>
+                    <ReviewerViewer payload={payload} gptChecked={gptChecked} />
+                    <QuestionCard
+                        claims={payload.meta.claims}
+                        response={payload.response}
+                        ratings={ratings}
+                        setRatings={setRatings}
+                        gptChecked={gptChecked}
+                    />
+                </Grid>
+            </Grid>
         </Box>
     );
 }
