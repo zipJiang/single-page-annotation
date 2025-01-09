@@ -21,10 +21,10 @@ function QuestionForm(props) {
         setRatings
     } = props;
 
-    const [gptChecked, setGptChecked] = useState(false);
-    const handleChange = (event) => {
-        setGptChecked(event.target.checked);
-      };
+    // const [gptChecked, setGptChecked] = useState(false);
+    // const handleChange = (event) => {
+    //     setGptChecked(event.target.checked);
+    //   };
 
     return (
         <Box sx={{
@@ -52,26 +52,17 @@ function QuestionForm(props) {
                                 </Typography>
                             </Button>
                             </Box>
-                            <Box sx={{
-                                order: 2,
-                            }}>
-                                <FormControlLabel label="GPT" control={
-                                    <Switch checked={gptChecked} onChange={handleChange} inputProps={
-                                        { 'aria-label': 'gpt-controlled' }
-                                    } />
-                                } />
-                            </Box>
                         </Box>
                     </Box>
                 </Grid>
                 <Grid item xs={7}>
-                    <ReviewerViewer payload={payload} gptChecked={gptChecked} />
+                    <ReviewerViewer payload={payload} />
                     <QuestionCard
                         claims={payload.meta.claims}
                         response={payload.response}
+                        clustering={payload["Clustered claims"]}
                         ratings={ratings}
                         setRatings={setRatings}
-                        gptChecked={gptChecked}
                     />
                 </Grid>
             </Grid>

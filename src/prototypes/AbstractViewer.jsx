@@ -20,7 +20,7 @@ function AbstractViewer(props) {
 
     return <NormalCard sx={{
         margin: "30px",
-        maxHeight: "80vh",
+        maxHeight: "900px",
         overflow: "auto"
     }}>
         <Typography variant="h4">
