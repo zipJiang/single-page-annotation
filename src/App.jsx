@@ -7,7 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { AppBar, Toolbar } from '@mui/material';
-import Interface from './prototypes/Interface';
+import Interface from './Interface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightPalette, darkPalette } from './components/themes';
 import { useMediaQuery } from '@mui/material';
