@@ -1,150 +1,127 @@
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { EmphCard } from '../components/Cards';
-import { LabeledSlider } from '../components/Sliders';
-import { FormControlLabel, Typography } from '@mui/material';
+import { FormControlLabel, InputLabel, Typography } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
 import { useState, useEffect } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
+import Select from '@mui/material/Select';
 import { TextField } from '@mui/material';
+import TextBlock from './TextBlock';
 
 
 function QuestionCard(props) {
     const {
-        claim,
-        currentBlockId,
-        currentBlockIdSetter,
-        currentValueSetter,
-        defaultValue,
-        questionValid,
-        questionValidSetter,
-        needExplanation,
-        commitLog,
-        commitLogSetter,
-        scaleFunc,
-        disabled = false,
+        claims,
+        response,
+        clustering,
+        ratings,
+        setRatings,
     } = props;
 
-    const [currentDisplayValue, setCurrentDisplayValue] = useState(defaultValue);
-    const [textFieldError, setTextFieldError] = useState(false);
-    const [textFieldValue, setTextFieldValue] = useState("");
+    const sections = [
+        "DESCRIPTIVE",
+        "INTERPRETIVE",
+        "OVERARCHING",
+        "RELATED_WORK",
+        "OTHER"
+    ]
 
-    // useEffect(() => {
-    //     setCurrentDisplayValue(defaultValue);
-    // }, [currentBlockId]);
-
-    const levalOfSupportFormat = (num) => {
-        // return "P = " + (num * 100).toFixed(2) + "%";
-        let text = "Uninformative";
-        if (num < 2 * (1250 - 5000)) {
-            text = "\u2248 Contradicted";
-        }
-        else if (num >= 2 * (1250 - 5000) && num < 2 * (3750 - 5000)) {
-            text = "\u2248 Mildly Contradicted";
-        }
-        else if (num >= 2 * (3750 - 5000) && num < 2 * (6250 - 5000)) {
-            text =  "\u2248 Uninformative";
-        }
-        else if (num >= 2 * (6250 - 5000) && num < 2 * (8750 - 5000)) {
-            text =  "\u2248 Mildly Supported";
-        }
-        else {
-            text =  "\u2248 Fully Supported";
-        }
-
-        return <div>
-                <div>{text}</div>
-                <div>{(num / 100).toFixed(2) + "%"}</div>
-            </div>;
+    const claim_to_index = (claim) => {
+        let claim_regex = /^claim(\d+):/i;
+        let index = claim.match(claim_regex)[1];
+        return parseInt(index) - 1;
     }
 
-    const validateTextField = () => {
-        return textFieldValue.length > 0;
-    }
+    const associated_indices = response['Associated claims'].map((i) => i - 1);
 
     return (
-        <EmphCard>
-            <Typography variant="prompt" component="div">
-                What's your estimation of an <Typography variant='italicPrompt' component='span'>initially unbiased observer's</Typography> belief in the given claim, reading till this point with the additional information presented in the bolded section?
+        <EmphCard sx={{
+            margin: "30px",
+            height: "500px",
+            overflow: "auto"
+        }}>
+            <Typography variant="h4">
+                Claims
             </Typography>
-            <Typography variant="question" component="div" sx={{ fontWeight: 'bold' }}>
-                Claim: {claim}
-            </Typography>
-            <Divider variant="middle" sx={{padding: "10px"}} />
-            <Box sx={{textAlign: "center"}}>
-                <LabeledSlider
-                    name={`for-block-${currentBlockId}`}
-                    setter={setCurrentDisplayValue}
-                    value={currentDisplayValue}
-                    defaultValue={defaultValue}
-                    scale={scaleFunc}
-                    marks={[
-                        {
-                            value: 0,
-                            label: <div className="BottomLabel">Contradicted</div>
-                        },
-                        {
-                            value: 2500,
-                            label: <div className="TopLabel">Mildly Contradicted</div>
-                        },
-                        {
-                            value: 5000,
-                            label: <div className="BottomLabel">Uninformative</div>
-                        },
-                        {
-                            value: 7500,
-                            label: <div className="TopLabel">Mildly Supported</div>
-                        },
-                        {
-                            value: 10000,
-                            label: <div className="BottomLabel">Fully Supported</div>
-                        }
-                    ]}
-                    valueLabelFormat={levalOfSupportFormat}
-                    disabled={disabled}
-                />
-                <Box sx={{paddingTop: "10px", maxWidth: "40%"}}>
-                    <FormGroup>
-                        <FormControlLabel control={
-                            <Checkbox checked={!questionValid} onChange={(e) => questionValidSetter(!e.target.checked)} disabled={disabled} />
-                        } label="Nonsensical / Unreadable"/>
-                    </FormGroup>
-                </Box>
-                {needExplanation && <Box sx={{textAlign: "center", width: "90%", padding: "10px"}}>
-                    <TextField 
-                        label="Reason for Modification (Required)"
-                        multiline={true}
-                        error={textFieldError}
-                        value={textFieldValue}
-                        onChange={(e) => {setTextFieldValue(e.target.value); setTextFieldError(false)}}
-                        helperText={textFieldError ? "Please provide a reason for modification." : ""}
-                        sx={{width: "100%"}}
-                        disabled={disabled}
-                    />
-                </Box>}
-                <Box sx={{textAlign: "center", paddingTop: "20px"}}>
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            if (needExplanation && !validateTextField()) {
-                                setTextFieldError(true);
-                                return;
-                            }
-                            currentValueSetter(currentDisplayValue);
-                            currentBlockIdSetter(currentBlockId + 1);
-                            commitLogSetter([...commitLog, {
-                                "block_id": currentBlockId,
-                                "value": currentDisplayValue,
-                                "reason": (' ' + textFieldValue).slice(1),
-                            }]);
-                            setTextFieldValue("");
-                        }}
-                        disabled={disabled}
-                    >
-                        <Typography variant="buttonText">Commit</Typography>
-                    </Button>
-                </Box>
+            <br />
+            <Box sx={{
+            }}>
+                {
+                    sections.map((section) => {
+                        console.log(section);
+                        return (
+                            <Box key={section}>
+                                <Divider>
+                                    <Chip label={section} size="small" />
+                                </Divider>
+                                {
+                                    clustering[section].map((claim, cindex) => {
+                                        let index = claim_to_index(claim);
+                                        return (
+                                            <Box key={section + cindex}>
+                                                {cindex != 0 && <Divider />}
+                                                <Box sx={{
+                                                    padding: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    justifyContent: "space-between",
+                                                    alignItems: "center",
+                                                }}>
+                                                    <Box sx={{
+                                                        order: 1,
+                                                        width: "60%"
+                                                    }}>
+                                                        <Typography variant="body1" component="div">
+                                                            {associated_indices.includes(index) && <Chip label="GPT-selected" color="primary" />}
+                                                            {" " + claim}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box sx={{
+                                                        order: 2,
+                                                        width: "30%"
+                                                    }}>
+                                                        <FormControl variant="filled" sx={{
+                                                            minWidth: "100%"
+                                                        }}>
+                                                            <InputLabel id={section + cindex + "rating"}>Rating</InputLabel>
+                                                            <Select
+                                                                labelId={section + cindex + "rating"}
+                                                                id={section + cindex}
+                                                                onChange={(event) => {
+                                                                    const new_ratings = [...ratings];
+                                                                    new_ratings[index] = event.target.value;
+                                                                    setRatings(new_ratings);
+                                                                }}
+                                                                value={ratings[index]}
+                                                                label="Rating"
+                                                                autoWidth
+                                                            >
+                                                                <MenuItem value={1}>Relevant</MenuItem>
+                                                                <MenuItem value={2}>Not Relevant</MenuItem>
+                                                            </Select>
+                                                        </FormControl>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        );
+                                    })
+                                }
+                            </Box>
+                        );
+                    })
+                }
+            </Box>
+            <Box sx={{
+                textAlign: "center",
+                padding: "10px"
+            }}>
+                <Button type="submit" variant="contained" value="Submit">Submit</Button>
+                {/* <input id="submitButton" classs="btn btn-primary" type="submit" value='Submit' /> */}
             </Box>
         </EmphCard>
     );

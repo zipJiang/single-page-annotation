@@ -1,15 +1,17 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
 import CssBaseline from '@mui/material/CssBaseline';
-import QuestionForm from './prototypes/QuestionForm';
 import Typography from '@mui/material/Typography';
 import { AppBar, Toolbar } from '@mui/material';
+import Interface from './prototypes/Interface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightPalette, darkPalette } from './components/themes';
-import Instructions from './prototypes/Instructions';
 import { useMediaQuery } from '@mui/material';
+import { parseCsvFromPublic } from './components/utils';
 
 
 const lightTheme = createTheme({
@@ -140,10 +142,61 @@ function App() {
   const theme = prefersDarkMode ? darkTheme : lightTheme;
   // const theme = lightTheme;
   // uncomment this for debugging
+  const [payloads, setPayloads] = useState([]);
+  const [payload_index, setPayloadIndex] = useState(0);
+  const [isPreview, setIsPreview] = useState(true);
+
+  useEffect(() => {
+    // console.log("is_preview", is_preview);
+    if (isPreview) {
+      const fetchPayload = async () => {
+        try {
+          const response = await parseCsvFromPublic("dev-data-with-cluster-and-span.csv");
+          setPayloads(response);
+        }
+        catch (error) {
+          console.error(error);
+        }
+      };
+      fetchPayload();
+    } else {
+      //using the content from an div element with id="payload-read"
+      setPayloads(
+        [JSON.parse(document.getElementById("payload-read").textContent)]
+      );
+    }
+  }, [isPreview]);
+
+  // const fetchPayload = async () => {
+  //   try {
+  //     parseCsvFromPublic("dev-data-with-cluster-and-span.csv").then((response) => {
+  //       setPayloads(response);
+  //       // console.log('payloads', payloads);
+  //     });
+  //   }
+  //   catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  // fetchPayload();
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      {payloads.length > 0 && <Box sx={{
+        justifyItems: "center"
+      }}>
+        {isPreview &&
+          <Box sx={{
+            padding: "30px",
+          }}>
+            <Stack alignItems="center" spacing={2}>
+            <Pagination count={payloads.length} page={payload_index + 1} onChange={(event, value) => setPayloadIndex(value - 1)} size="large" />
+            </Stack>
+          </Box>
+        }
+        <Interface payload={payloads[payload_index]} theme={theme} />
+      </Box>}
     </ThemeProvider>
   );
 }
