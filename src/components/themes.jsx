@@ -27,6 +27,9 @@ const lightPalette = createTheme({
     "card-bg-emph": {
         main: "#b3e5fc",
     },
+    grey: {
+        main: "#636363",
+    }
   }
 });
 
@@ -57,6 +60,9 @@ const darkPalette = createTheme({
         },
         "card-bg-emph": {
             main: "#5d727d",
+        },
+        grey: {
+            main: "#f5f5f5",
         }
     },
 })

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
@@ -6,10 +7,29 @@ import { Grid } from "@mui/material";
 import { NormalCard } from "../components/Cards";
 import { Height } from "@mui/icons-material";
 
+
+const candidateColorList = [
+    "#F94144",
+    "#F3722C",
+    "#F8961E",
+    "#F9844A",
+    "#F9C74F",
+    "#90BE6D",
+    "#43AA8B",
+    "#4D908E",
+    "#577590",
+    "#277DA1",
+]
+
+
 function ReviewerViewer(props) {
     const {
+        theme,
         payload,
+        hoverWeakness,
     } = props;
+
+    const parentRef = useRef(null);
 
     // Extract title and abstract using regex
     // The text looks like Title: xxx Abstract: xxx
@@ -18,33 +38,19 @@ function ReviewerViewer(props) {
 
     return <NormalCard sx={{
         margin: "30px",
-        height: "340px",
+        height: "300px",
     }}>
         <Box sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "baseline",
-        }}>
-            <Box sx={{
-                order: 1,
-                width: "48%",
-                height: "300px",
-                overflow: "auto"
-            }}>
-                <TextBlock prefix="Review: " text={review} selection={payload.response['Weakness span']} />
-            </Box>
-            <Divider orientation="vertical" flexItem sx={{order: 2}} />
-            <Box sx={{
-                order: 3,
-                width: "48%",
-                height: "300px",
-                overflow: "auto"
-            }}>
-                <TextBlock prefix="GPT-Reasoning: " text={payload.response.Reasoning} />
-                <TextBlock prefix="GPT-Label: " text={payload.response.Label} />
-                <TextBlock prefix="GPT-Highlight: " text={payload.response['Weakness span']} />
-            </Box>
+            height: "100%",
+            overflow: "auto",
+        }}
+            ref={parentRef}
+        >
+            <TextBlock prefix="Review: " text={review} selection={
+                hoverWeakness == -1 ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']
+            } parentRef={parentRef} bColor={
+                hoverWeakness == -1 ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness * 4 % candidateColorList.length]
+            } />
         </Box>
     </NormalCard>
 }

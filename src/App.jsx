@@ -22,6 +22,9 @@ const lightTheme = createTheme({
       color: "lightgrey",
       lineHeight: 2.0,
     },
+    weaknessDescription: {
+      fontWeight: 'normal',
+    },
     reading: {
       fontWeight: 'bold',
       color: lightPalette.palette.black.main,
@@ -69,6 +72,9 @@ const darkTheme = createTheme({
       fontWeight: 'normal',
       color: "lightgrey",
       lineHeight: 2.0,
+    },
+    weaknessDescription: {
+      fontWeight: 'normal',
     },
     reading: {
       fontWeight: 'bold',
@@ -144,14 +150,14 @@ function App() {
   // uncomment this for debugging
   const [payloads, setPayloads] = useState([]);
   const [payload_index, setPayloadIndex] = useState(0);
-  const [isPreview, setIsPreview] = useState(true);
+  const [isPreview, setIsPreview] = useState(false);
 
   useEffect(() => {
     // console.log("is_preview", is_preview);
     if (isPreview) {
       const fetchPayload = async () => {
         try {
-          const response = await parseCsvFromPublic("dev-data-with-cluster-and-span.csv");
+          const response = await parseCsvFromPublic("dev-data.csv");
           setPayloads(response);
         }
         catch (error) {

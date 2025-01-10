@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextBlock from "./TextBlock";
 import { NormalCard } from "../components/Cards";
@@ -20,14 +20,17 @@ function AbstractViewer(props) {
 
     return <NormalCard sx={{
         margin: "30px",
-        maxHeight: "900px",
+        height: "500px",
         overflow: "auto"
     }}>
         <Typography variant="h4">
-            {title}
+            {title}&nbsp;
+            <Button variant="contained" color="primary"
+                onClick={() => window.open("https://"+payload.pdf, "_blank")}
+            >pdf</Button>
         </Typography>
         <br />
-        <TextBlock prefix="Abstract:" text={abstract} />
+        <TextBlock prefix="Abstract: " text={abstract} />
     </NormalCard>
 }
 
