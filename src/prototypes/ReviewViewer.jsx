@@ -6,20 +6,7 @@ import TextBlock from "./TextBlock";
 import { Grid } from "@mui/material";
 import { NormalCard } from "../components/Cards";
 import { Height } from "@mui/icons-material";
-
-
-const candidateColorList = [
-    "#F94144",
-    "#F3722C",
-    "#F8961E",
-    "#F9844A",
-    "#F9C74F",
-    "#90BE6D",
-    "#43AA8B",
-    "#4D908E",
-    "#577590",
-    "#277DA1",
-]
+import { candidateColorList } from "./ckp";
 
 
 function ReviewerViewer(props) {
@@ -47,9 +34,9 @@ function ReviewerViewer(props) {
             ref={parentRef}
         >
             <TextBlock prefix="Review: " text={review} selection={
-                hoverWeakness == -1 ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']
+                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']
             } parentRef={parentRef} bColor={
-                hoverWeakness == -1 ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness * 4 % candidateColorList.length]
+                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness % candidateColorList.length]
             } />
         </Box>
     </NormalCard>

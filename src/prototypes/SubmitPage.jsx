@@ -8,8 +8,10 @@ import { useState } from "react";
 
 function SubmitPage(props) {
     const {
-        claimIndex,
-        setClaimIndex,
+        hoverWeakness,
+        setHoverWeakness,
+        weaknessIndex,
+        setWeaknessIndex,
     } = props;
 
     return (
@@ -25,7 +27,8 @@ function SubmitPage(props) {
                             width: "100%",
                             borderRadius: "10px",
                         }} onClick={() => {
-                            setClaimIndex(claimIndex - 1);
+                            setHoverWeakness(hoverWeakness - 1);
+                            setWeaknessIndex(weaknessIndex - 1);
                         }}>
                             <Typography variant="h3">Prev</Typography>
                         </Button>

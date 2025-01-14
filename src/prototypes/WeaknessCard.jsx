@@ -6,20 +6,7 @@ import { NormalCard, EmphCard } from '../components/Cards';
 import Slider from '@mui/material/Slider';
 import { Height } from '@mui/icons-material';
 import TextBlock from './TextBlock';
-
-
-const candidateColorList = [
-    "#F94144",
-    "#F3722C",
-    "#F8961E",
-    "#F9844A",
-    "#F9C74F",
-    "#90BE6D",
-    "#43AA8B",
-    "#4D908E",
-    "#577590",
-    "#277DA1",
-]
+import { candidateColorList } from './ckp';
 
 
 function WeaknessCard(props) {
@@ -30,7 +17,12 @@ function WeaknessCard(props) {
         weakness,
         weaknessSelection,
         setWeaknessSelectionForIndex,
-        setHoverWeakness
+        setHoverWeakness,
+        defaultWidth = "300px",
+        fontVariant = "weaknessDescription",
+        bandPercentage = 10,
+        setWeaknessIndex = (v) => {},
+        mouseEnterToHover = true
     } = props;
 
     const [spring, api] = useSpring(() => ({
@@ -44,23 +36,13 @@ function WeaknessCard(props) {
         }
     }));
 
-    const [innerSpring, innerApi] = useSpring(() => ({
-        from: {
-            height: "90%"
-        },
-        config: {
-            mass: 1,
-            tension: 170,
-            friction: 26,
-        }
-    }));
-
     const handleMouseEnter = () => {
         api.start({
             transform: "scale(1.05)",
             boxShadow: "0px 0px 10px rgba(0,0,0,0.2)",
         });
-        setHoverWeakness(index);
+        if (mouseEnterToHover)
+            setHoverWeakness(index);
     }
 
     const handleMouseLeave = () => {
@@ -71,22 +53,17 @@ function WeaknessCard(props) {
     }
 
     const handleClick = () => {
-        setWeaknessSelectionForIndex({
-            ...weaknessSelection,
-            selected: !weaknessSelection.selected,
-        });
+        if (mouseEnterToHover) {
+            setWeaknessSelectionForIndex({
+                ...weaknessSelection,
+                selected: !weaknessSelection.selected,
+            });
+        } else {
+            // We just change the hover state
+            // as well as
+            setWeaknessIndex(index);
+        }
     }
-
-    // useEffect(() => {
-    //     if (weaknessSelection) {
-    //         setWeaknessSelectionForIndex({
-    //             ...weaknessSelection,
-    //             selected: false,
-    //             uncertainty: 0,
-    //             subjectivity: 0,
-    //         })
-    //     }
-    // }, [claimIndex]);
 
     const markers = [
         {
@@ -111,22 +88,6 @@ function WeaknessCard(props) {
         },
     ]
 
-    useEffect(() => {
-        if (weaknessSelection && weaknessSelection.selected) {
-            innerApi.start({
-                to: {
-                    height: "65%"
-                }
-            })
-        } else {
-            innerApi.start({
-                to: {
-                    height: "90%"
-                }
-            });
-        }
-    }, [weaknessSelection]);
-
     return (
         <animated.div
             style={{
@@ -134,7 +95,8 @@ function WeaknessCard(props) {
                 padding: "0px",
                 borderRadius: "10px",
                 opacity: weaknessSelection && weaknessSelection.selected ? 1 : 0.5,
-                ...spring
+                cursor: "pointer",
+                ...spring,
             }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -143,20 +105,19 @@ function WeaknessCard(props) {
                 sx={{
                     margin: "0px",
                     padding: "0px",
-                    width: "300px",
-                    height: "300px",
+                    width: defaultWidth,
+                    height: defaultWidth,
                 }}
             >
-                <Box sx={{
-                    backgroundColor: weaknessSelection && weaknessSelection.selected ? candidateColorList[(4 * index) % candidateColorList.length] : theme.palette.grey.main,
+                <div style={{
+                    backgroundColor: weaknessSelection && weaknessSelection.selected ? candidateColorList[index % candidateColorList.length] : theme.palette.grey.main,
                     width: "100%",
-                    height: "10%",
+                    height: bandPercentage + "%"
                 }}>
-                </Box>
+                </div>
                 <animated.div
                     style={{
-                        height: "90%",
-                        ...innerSpring
+                        height: (100 - bandPercentage) + "%",
                     }}
                     onClick={handleClick}
                 >
@@ -165,91 +126,9 @@ function WeaknessCard(props) {
                         padding: "10px",
                         overflow: "auto",
                     }}>
-                        <TextBlock prefix="Weakness: " text={weakness.Reasoning} variant="weaknessDescription" />
+                        <TextBlock prefix="Weakness: " text={weakness.Reasoning} variant={fontVariant} />
                     </Box>
                 </animated.div>
-                <Divider />
-                <Box sx={{
-                    padding: "5px 20px 0px 20px",
-                    height: "25%",
-                }}>
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        width: "100%",
-                    }}>
-                        <Box sx={{
-                            order: 1,
-                            width: "20%",
-                        }}>
-                            <TextBlock prefix="Conf: " text="" />
-                        </Box>
-                        <Box sx={{
-                            order: 2,
-                            width: "200px",
-                        }}>
-                            <Slider
-                                aria-label={"confidence" + index}
-                                size="small"
-                                defaultValue={0} 
-                                value={weaknessSelection ? weaknessSelection.uncertainty : 0}
-                                valueLabelDisplay="auto"
-                                min={1}
-                                max={5}
-                                step={1}
-                                sx={{
-                                    color: candidateColorList[(4 * index) % candidateColorList.length],
-                                }}
-                                disabled={!(weaknessSelection && weaknessSelection.selected)}
-                                onChange={(event, value) => {
-                                    setWeaknessSelectionForIndex({
-                                        ...weaknessSelection,
-                                        uncertainty: value,
-                                    });
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        width: "100%",
-                    }}>
-                        <Box sx={{
-                            order: 1,
-                            width: "20%",
-                        }}>
-                            <TextBlock prefix="Subj: " text="" />
-                        </Box>
-                        <Box sx={{
-                            order: 2,
-                            width: "200px",
-                        }}>
-                            <Slider
-                                aria-label={"subjectivity" + index}
-                                size="small"
-                                defaultValue={0} 
-                                value={weaknessSelection ? weaknessSelection.subjectivity : 0}
-                                valueLabelDisplay="auto"
-                                min={1}
-                                max={5}
-                                step={1}
-                                sx={{
-                                    color: candidateColorList[(4 * index) % candidateColorList.length],
-                                }}
-                                disabled={!(weaknessSelection && weaknessSelection.selected)}
-                                onChange={(event, value) => {
-                                    setWeaknessSelectionForIndex({
-                                        ...weaknessSelection,
-                                        subjectivity: value,
-                                    });
-                                }}
-                            />
-                        </Box>
-                    </Box>
-                </Box>
             </NormalCard>
         </animated.div>
     );

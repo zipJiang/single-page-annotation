@@ -17,6 +17,9 @@ import { parseCsvFromPublic } from './components/utils';
 const lightTheme = createTheme({
   ...lightPalette,
   typography: {
+    annotation: {
+      fontSize: 10,
+    },
     prevRead: {
       fontWeight: 'normal',
       color: "lightgrey",
@@ -24,6 +27,10 @@ const lightTheme = createTheme({
     },
     weaknessDescription: {
       fontWeight: 'normal',
+    },
+    tinyWeaknessDescription: {
+      fontWeight: 'normal',
+      fontSize: 4,
     },
     reading: {
       fontWeight: 'bold',
@@ -33,6 +40,10 @@ const lightTheme = createTheme({
     prompt: {
       color: lightPalette.palette.black.main,
       lineHeight: 2.0,
+    },
+    squeezedPrompt: {
+      color: lightPalette.palette.black.main,
+      lineHeight: 1.0,
     },
     italicPrompt: {
       color: lightPalette.palette.black.main,
@@ -68,6 +79,9 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   ...darkPalette,
   typography: {
+    annotation: {
+      fontSize: 10,
+    },
     prevRead: {
       fontWeight: 'normal',
       color: "lightgrey",
@@ -75,6 +89,10 @@ const darkTheme = createTheme({
     },
     weaknessDescription: {
       fontWeight: 'normal',
+    },
+    tinyWeaknessDescription: {
+      fontWeight: 'normal',
+      fontSize: 4,
     },
     reading: {
       fontWeight: 'bold',
@@ -84,6 +102,10 @@ const darkTheme = createTheme({
     prompt: {
       color: darkPalette.palette.black.main,
       lineHeight: 2.0,
+    },
+    squeezedPrompt: {
+      color: lightPalette.palette.black.main,
+      lineHeight: 1.0,
     },
     italicPrompt: {
       color: darkPalette.palette.black.main,
@@ -145,8 +167,8 @@ function CustomTabPanel(props) {
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const theme = prefersDarkMode ? darkTheme : lightTheme;
-  // const theme = lightTheme;
+  // const theme = prefersDarkMode ? darkTheme : lightTheme;
+  const theme = lightTheme;
   // uncomment this for debugging
   const [payloads, setPayloads] = useState([]);
   const [payload_index, setPayloadIndex] = useState(0);

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import QuestionCard from './QuestionCard';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/material';
@@ -12,6 +11,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import ReviewerViewer from './ReviewViewer';
 import WeaknessCard from './WeaknessCard';
+import WeaknessAnnotation from './WeaknessAnnotation';
 
 
 function QuestionForm(props) {
@@ -21,10 +21,21 @@ function QuestionForm(props) {
         claimType,
         setClaimType,
         weaknessSelection,
+        fullWeaknessSelection,
         setWeaknessSelection,
         claimIndex,
         setClaimIndex,
         setHoverWeakness,
+        weaknessIndex,
+        setWeaknessIndex,
+        weaknessTypeAnnotation,
+        setWeaknessTypeAnnotation,
+        secondarySelection,
+        setSecondarySelection,
+        weaknessBads,
+        setWeaknessBads,
+        weaknessComments,
+        setWeaknessComments,
     } = props;
 
     const setWeaknessSelectionForIndexFactory = (index) => {
@@ -33,6 +44,27 @@ function QuestionForm(props) {
             newWeaknessSelection[index] = value;
             setWeaknessSelection(newWeaknessSelection);
         }
+    }
+
+    if (claimIndex >= payload.meta.claims.length) {
+        return (
+        <WeaknessAnnotation 
+            theme={theme}
+            payload={payload}
+            weaknessSelection={fullWeaknessSelection}
+            setHoverWeakness={setHoverWeakness}
+            weaknessIndex={weaknessIndex}
+            setWeaknessIndex={setWeaknessIndex}
+            weaknessTypeAnnotation={weaknessTypeAnnotation}
+            setWeaknessTypeAnnotation={setWeaknessTypeAnnotation}
+            setClaimIndex={setClaimIndex}
+            secondarySelection={secondarySelection}
+            setSecondarySelection={setSecondarySelection}
+            weaknessBads={weaknessBads}
+            setWeaknessBads={setWeaknessBads}
+            weaknessComments={weaknessComments}
+            setWeaknessComments={setWeaknessComments}
+        />);
     }
 
     return (
