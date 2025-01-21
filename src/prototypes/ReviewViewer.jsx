@@ -21,7 +21,11 @@ function ReviewerViewer(props) {
     // Extract title and abstract using regex
     // The text looks like Title: xxx Abstract: xxx
     let review_regex = /Review: (.*)/s;
-    let review = payload.meta.review.match(review_regex)[1];
+    let review = payload.meta.review.replace(/\s+/g, ' ');
+    review = review.match(review_regex)[1];
+    if (hoverWeakness != -1 && hoverWeakness < payload.response["Weakness associated with claims"].length) {
+        console.log(payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']);
+    }
 
     return <NormalCard sx={{
         margin: "30px",
@@ -34,7 +38,7 @@ function ReviewerViewer(props) {
             ref={parentRef}
         >
             <TextBlock prefix="Review: " text={review} selection={
-                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']
+                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ')
             } parentRef={parentRef} bColor={
                 (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness % candidateColorList.length]
             } />

@@ -109,6 +109,7 @@ function Interface(props) {
         })));
         setClaimIndex(0);
         setWeaknessIndex(0);
+        setHoverWeakness(-1);
         setSecondarySelection(new Array(numberOfWeaknesses).fill(null).map(() => new Set()));
         setWeaknessBads(new Array(numberOfWeaknesses).fill(false));
         setWeaknessComments(new Array(numberOfWeaknesses).fill(null).map(() => ("")));

@@ -172,7 +172,7 @@ function App() {
   // uncomment this for debugging
   const [payloads, setPayloads] = useState([]);
   const [payload_index, setPayloadIndex] = useState(0);
-  const [isPreview, setIsPreview] = useState(false);
+  const [isPreview, setIsPreview] = useState(true);
 
   useEffect(() => {
     // console.log("is_preview", is_preview);
