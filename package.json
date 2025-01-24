@@ -18,6 +18,7 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@nivo/line": "^0.85.1",
+    "@react-spring/web": "^9.7.5",
     "papaparse": "^5.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

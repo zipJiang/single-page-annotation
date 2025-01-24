@@ -31,6 +31,20 @@ const lightTheme = createTheme({
       color: lightPalette.palette.black.main,
       lineHeight: 2.0,
     },
+    squeezedPrompt: {
+      color: lightPalette.palette.black.main,
+      lineHeight: 1.0,
+      fontSize: 10,
+    },
+    editedOut: {
+      color: lightPalette.palette.alerting.main,
+      lineHeight: 2.0,
+      textDecoration: 'line-through',
+    },
+    editedIn: {
+      color: lightPalette.palette.primary.main,
+      lineHeight: 2.0,
+    },
     italicPrompt: {
       color: lightPalette.palette.black.main,
       lineHeight: 2.0,
@@ -77,6 +91,20 @@ const darkTheme = createTheme({
     },
     prompt: {
       color: darkPalette.palette.black.main,
+      lineHeight: 2.0,
+    },
+    squeezedPrompt: {
+      color: lightPalette.palette.black.main,
+      lineHeight: 1.0,
+      fontSize: 10,
+    },
+    editedOut: {
+      color: lightPalette.palette.alerting.main,
+      lineHeight: 2.0,
+      textDecoration: 'line-through',
+    },
+    editedIn: {
+      color: lightPalette.palette.primary.main,
       lineHeight: 2.0,
     },
     italicPrompt: {
@@ -139,8 +167,8 @@ function CustomTabPanel(props) {
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const theme = prefersDarkMode ? darkTheme : lightTheme;
-  // const theme = lightTheme;
+  // const theme = prefersDarkMode ? darkTheme : lightTheme;
+  const theme = lightTheme;
   // uncomment this for debugging
   const [payloads, setPayloads] = useState([]);
   const [payload_index, setPayloadIndex] = useState(0);
@@ -151,7 +179,7 @@ function App() {
     if (isPreview) {
       const fetchPayload = async () => {
         try {
-          const response = await parseCsvFromPublic("dev-data-with-cluster-and-span.csv");
+          const response = await parseCsvFromPublic("highlighted.csv");
           setPayloads(response);
         }
         catch (error) {
