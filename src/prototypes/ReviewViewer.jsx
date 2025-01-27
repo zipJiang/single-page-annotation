@@ -24,11 +24,15 @@ function ReviewerViewer(props) {
     let review_regex = /Review: (.*)/s;
     let review = payload.meta.review.replace(/\s+/g, ' ');
     review = review.match(review_regex)[1];
-    const reviewTokens = review.split(/\s+/);
     if (hoverWeakness != -1 && hoverWeakness < payload.response["Weakness associated with claims"].length) {
         console.log(payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']);
     }
+    const reviewTokens = review.split(/\s+/);
 
+    // TODO:  To illustrate usage, we create state in this component for a single weakness span
+    // and pass that to SelectableTextBlock.  To finish integrating SelectableTextBlock with the
+    // rest of the interface, we should get (and set) state from the parent component, Interface,
+    // allowing for multiple independent weakness spans.
     const selection = (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length)
         ? null
         : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ');
