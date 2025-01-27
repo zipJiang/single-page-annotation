@@ -84,17 +84,26 @@ function SelectableTextBlock(props) {
       );
     }
 
+    function tokensForSpan(span) {
+      return tokens.slice(span[0], span[1] + 1)
+    }
+
+    function textForSpan(span) {
+      return tokensForSpan(span).join(' ');
+    }
+
+    function onSelectWrapper(span) {
+      return onSelect(span, tokensForSpan(span), textForSpan(span));
+    }
+
     function onMouseEnter(tokenIndex) {
       if (dragInProgress()) {
         if (tokenIndex != dragLastTokenIndex.current) {
           dragLastTokenIndex.current = tokenIndex;
-          onSelect({
-            span: [
-              Math.min(dragStartTokenIndex.current, tokenIndex),
-              Math.max(dragStartTokenIndex.current, tokenIndex)
-            ],
-            text: selectedText(),
-          });
+          onSelectWrapper([
+            Math.min(dragStartTokenIndex.current, tokenIndex),
+            Math.max(dragStartTokenIndex.current, tokenIndex)
+          ]);
         }
       } else {
         dragStartTokenIndex.current = -1;
@@ -105,7 +114,7 @@ function SelectableTextBlock(props) {
     function onMouseDown(tokenIndex) {
       dragStartTokenIndex.current = tokenIndex;
       dragLastTokenIndex.current = tokenIndex;
-      onSelect([tokenIndex, tokenIndex]);
+      onSelectWrapper([tokenIndex, tokenIndex]);
     }
 
     function onMouseLeave() {
@@ -115,7 +124,7 @@ function SelectableTextBlock(props) {
       }
     }
 
-    const TextSpan = styled("span")(() => {
+    const TextSpan = styled("span")(({ theme }) => {
       const baseStyle = {
         display: 'inline-block',
         userSelect: 'none',
@@ -136,7 +145,7 @@ function SelectableTextBlock(props) {
 
     const Token = ({ index, text }) => {
       return <TextSpan
-        sx={tokenIsHighlighted(tokenIndex) ? {bgColor: bColor} : {}}
+        sx={tokenIsHighlighted(index) ? {bgColor: bColor} : {}}
         ref={index === firstHighlightedTokenIndex ? targetRef : null}
         onMouseEnter={() => onMouseEnter(index)}
         onMouseDown={() => onMouseDown(index)}
@@ -177,9 +186,9 @@ function SelectableTextBlock(props) {
           {prefix ? <b>{prefix}</b> : null}
           {
             tokens.flatMap((token, tokenIndex) => {
-              const tokenElement = <Token index={tokenIndex} text={token} />;
+              const tokenElement = <Token key={`Token${tokenIndex}`} index={tokenIndex} text={token} />;
               return tokenIndex >= 0
-                ? [<LeadingText tokenIndex={tokenIndex} text=" " />, tokenElement]
+                ? [<LeadingText key={`LeadingText${tokenIndex}`} tokenIndex={tokenIndex} text=" " />, tokenElement]
                 : [tokenElement];
             })
           }
