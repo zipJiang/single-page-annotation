@@ -38,12 +38,13 @@ function ReviewerViewer(props) {
         : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ');
     const selectionTokens = selection !== null
         ? selection.split(/s+/)
-        : [];
-    const selectionIndices = findSubArray(reviewTokens, selectionTokens);
-    // SelectableTextBlock.selectedTokenSpan end index is inclusive
+        : null;
+    const selectionIndices = selectionTokens
+        ? findSubArray(reviewTokens, selectionTokens)
+        : null;
     const [selectedTokenSpan, setSelectedTokenSpan] = useState(
         selectionIndices
-        ? [selectionIndices[0], selectionIndices[1] - 1]
+        ? [selectionIndices[0], selectionIndices[1] - 1]  // selectedTokenSpan end index is inclusive
         : null
     );
 
