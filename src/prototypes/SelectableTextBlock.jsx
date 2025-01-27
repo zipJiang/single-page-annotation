@@ -68,14 +68,6 @@ function SelectableTextBlock(props) {
       )
     }
 
-    function selectedText() {
-      return tokenSpanIsNonEmpty(selectedTokenSpan)
-        ? tokens
-            .slice(selectedTokenSpan[0], selectedTokenSpan[1] + 1)
-            .join(" ")
-        : null;
-    }
-
     function dragInProgress() {
       return (
         tokenSpanIsNonEmpty(selectedTokenSpan)
@@ -85,11 +77,11 @@ function SelectableTextBlock(props) {
     }
 
     function tokensForSpan(span) {
-      return tokens.slice(span[0], span[1] + 1)
+      return tokenSpanIsNonEmpty(span) ? tokens.slice(span[0], span[1] + 1) : [];
     }
 
     function textForSpan(span) {
-      return tokensForSpan(span).join(' ');
+      return tokenSpanIsNonEmpty(span) ? tokensForSpan(span).join(' ') : '';
     }
 
     function onSelectWrapper(span) {
