@@ -22,12 +22,6 @@ function tokenIsInSpan(tokenIndex, tokenSpan) {
   );
 }
 
-function tokenIsInSpanBeforeEnd(tokenIndex, tokenSpan) {
-  return (
-    tokenIsInSpan(tokenIndex, tokenSpan) && tokenSpan[1] > tokenIndex
-  );
-}
-
 function tokenIsInSpanAfterStart(tokenIndex, tokenSpan) {
   return (
     tokenIsInSpan(tokenIndex, tokenSpan) && tokenSpan[0] < tokenIndex
