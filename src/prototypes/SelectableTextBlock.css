@@ -1,4 +1,3 @@
 .selectable-token:hover {
-  background-color: mix(white, #ffc107, 80) !important;
   text-decoration: underline !important;
 }

@@ -137,6 +137,7 @@ function SelectableTextBlock(props) {
 
     const Token = ({ tokenIndex, text }) => {
       return <TextSpan
+        className="selectable-token"
         sx={tokenIsHighlighted(tokenIndex) ? {backgroundColor: bColor} : {}}
         ref={tokenIndex === firstHighlightedTokenIndex ? targetRef : null}
         onMouseEnter={() => onMouseEnter(tokenIndex)}
