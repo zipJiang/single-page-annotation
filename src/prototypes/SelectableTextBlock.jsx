@@ -135,20 +135,20 @@ function SelectableTextBlock(props) {
         : baseStyle;
     });
 
-    const LeadingText = ({ tokenIndex, text }) => {
+    const LeadingText = ({ tokenIndex }) => {
       return <TextSpan
-        sx={leadingTextIsHighlighted(tokenIndex) ? {bgColor: bColor} : {}}
+        sx={leadingTextIsHighlighted(tokenIndex) ? {backgroundColor: bColor} : {}}
       >
-        {text.replaceAll(" ", "&nbsp;")}
+        &nbsp;
       </TextSpan>;
     };
 
-    const Token = ({ index, text }) => {
+    const Token = ({ tokenIndex, text }) => {
       return <TextSpan
-        sx={tokenIsHighlighted(index) ? {bgColor: bColor} : {}}
-        ref={index === firstHighlightedTokenIndex ? targetRef : null}
-        onMouseEnter={() => onMouseEnter(index)}
-        onMouseDown={() => onMouseDown(index)}
+        sx={tokenIsHighlighted(tokenIndex) ? {backgroundColor: bColor} : {}}
+        ref={tokenIndex === firstHighlightedTokenIndex ? targetRef : null}
+        onMouseEnter={() => onMouseEnter(tokenIndex)}
+        onMouseDown={() => onMouseDown(tokenIndex)}
         onMouseLeave={onMouseLeave}
       >
         {text.replaceAll(" ", "&nbsp;")}
@@ -186,9 +186,9 @@ function SelectableTextBlock(props) {
           {prefix ? <b>{prefix}</b> : null}
           {
             tokens.flatMap((token, tokenIndex) => {
-              const tokenElement = <Token key={`Token${tokenIndex}`} index={tokenIndex} text={token} />;
+              const tokenElement = <Token key={`Token${tokenIndex}`} tokenIndex={tokenIndex} text={token} />;
               return tokenIndex >= 0
-                ? [<LeadingText key={`LeadingText${tokenIndex}`} tokenIndex={tokenIndex} text=" " />, tokenElement]
+                ? [<LeadingText key={`LeadingText${tokenIndex}`} tokenIndex={tokenIndex} />, tokenElement]
                 : [tokenElement];
             })
           }
