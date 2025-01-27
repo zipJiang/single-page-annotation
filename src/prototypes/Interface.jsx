@@ -75,6 +75,8 @@ function Interface(props) {
         ).fill(null).map(() => new Set())
     );
 
+    const [weaknessAppendix, setWeaknessAppendix] = useState(new Array(numberOfWeaknesses).fill(null).map(() => ("")));
+
     useEffect(() => {
         const numberOfWeaknesses = payload.response['Weakness associated with claims'].length;
         setWeaknessSelection(
@@ -113,6 +115,7 @@ function Interface(props) {
         setSecondarySelection(new Array(numberOfWeaknesses).fill(null).map(() => new Set()));
         setWeaknessBads(new Array(numberOfWeaknesses).fill(false));
         setWeaknessComments(new Array(numberOfWeaknesses).fill(null).map(() => ("")));
+        setWeaknessAppendix(new Array(numberOfWeaknesses).fill(null).map(() => ("")));
     }, [payload]);
 
     const setWeaknessSelectionFactory = (claimIndex) => {
@@ -187,6 +190,8 @@ function Interface(props) {
                                 setWeaknessBads={setWeaknessBads}
                                 weaknessComments={weaknessComments}
                                 setWeaknessComments={setWeaknessComments}
+                                weaknessAppendix={weaknessAppendix}
+                                setWeaknessAppendix={setWeaknessAppendix}
                             />
                         }
                     </Grid>
@@ -203,6 +208,9 @@ function Interface(props) {
             } />
             <input type="hidden" id="weaknessComments" name="weaknessComments" value={
                 JSON.stringify(weaknessComments)
+            } />
+            <input type="hidden" id="weaknessAppendix" name="weaknessAppendix" value={
+                JSON.stringify(weaknessAppendix)
             } />
         </Box>
     );

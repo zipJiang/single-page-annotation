@@ -49,6 +49,8 @@ function AnnotatableWeaknessCard(props) {
         setWeaknessTypeAnnotation,
         secondarySelection,
         setSecondarySelection,
+        weaknessAppendix,
+        setWeaknessAppendix,
         defaultWidth = "300px",
         fontVariant = "weaknessDescription",
     } = props;
@@ -122,7 +124,46 @@ function AnnotatableWeaknessCard(props) {
         (selected) => selected.sindex
     );
 
-    // console.log(weaknessTypeAnnotation);
+    const claimSelection = (
+        <Box>
+            {index_of_associated_claims.map((sindex, inblockIndex) => {
+                return (
+                    <Box
+                        key={"associated-claim-" + index + "-" + sindex}
+                    >
+                    {inblockIndex != 0 && <Divider sx={{
+                        margin: "0px",
+                        padding: "0px 50px 0px 50px",
+                    }}/>}
+                        <SecondaryClaimSelection
+                            sindex={sindex}
+                            payload={payload}
+                            secondarySelection={secondarySelection}
+                            setSecondarySelection={setSecondarySelection}
+                        />
+                    </Box>
+                )
+            })}
+            <Box sx={{
+                padding: "20px",
+            }}>
+                <TextField
+                    id={"outlined-textarea-enter-claim-" + index}
+                    label="Additional Target Claim"
+                    placeholder="Enter a claim that you believe is related to this weakness but is not extracted..."
+                    multiline
+                    variant="outlined"
+                    sx={{
+                        width: "100%",
+                    }}
+                    value={weaknessAppendix}
+                    onChange={(event) => {
+                        setWeaknessAppendix(event.target.value);
+                    }}
+                />
+            </Box>
+        </Box>
+    );
 
     return (
         <Box
@@ -158,26 +199,7 @@ function AnnotatableWeaknessCard(props) {
                 }}>
                     <Chip variant="contained" label="Please Select Targeted Claims" />
                 </Divider>
-                <Box>
-                    {index_of_associated_claims.map((sindex, inblockIndex) => {
-                        return (
-                            <Box
-                                key={"associated-claim-" + index + "-" + sindex}
-                            >
-                            {inblockIndex != 0 && <Divider sx={{
-                                margin: "0px",
-                                padding: "0px 50px 0px 50px",
-                            }}/>}
-                                <SecondaryClaimSelection
-                                    sindex={sindex}
-                                    payload={payload}
-                                    secondarySelection={secondarySelection}
-                                    setSecondarySelection={setSecondarySelection}
-                                />
-                            </Box>
-                        )
-                    })}
-                </Box>
+                {claimSelection}
                 <Divider sx={{
                     margin: "10px",
                 }}>
@@ -342,7 +364,7 @@ function AnnotatableWeaknessCard(props) {
                     padding: "20px",
                 }}>
                     <TextField
-                        id="outlined-textarea"
+                        id={"outlined-textarea" + index}
                         label="Comments"
                         placeholder="Comments"
                         multiline

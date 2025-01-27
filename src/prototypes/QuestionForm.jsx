@@ -36,6 +36,8 @@ function QuestionForm(props) {
         setWeaknessBads,
         weaknessComments,
         setWeaknessComments,
+        weaknessAppendix,
+        setWeaknessAppendix,
     } = props;
 
     const setWeaknessSelectionForIndexFactory = (index) => {
@@ -64,6 +66,8 @@ function QuestionForm(props) {
             setWeaknessBads={setWeaknessBads}
             weaknessComments={weaknessComments}
             setWeaknessComments={setWeaknessComments}
+            weaknessAppendix={weaknessAppendix}
+            setWeaknessAppendix={setWeaknessAppendix}
         />);
     }
 

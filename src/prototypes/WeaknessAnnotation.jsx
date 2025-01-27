@@ -24,6 +24,8 @@ function WeaknessAnnotation(props) {
         setWeaknessBads,
         weaknessComments,
         setWeaknessComments,
+        weaknessAppendix,
+        setWeaknessAppendix,
     } = props;
 
     const setWeaknessTypeAnnotationForIndexFactory = (index) => {
@@ -55,6 +57,14 @@ function WeaknessAnnotation(props) {
             let newWeaknessComments = [...weaknessComments];
             newWeaknessComments[index] = value;
             setWeaknessComments(newWeaknessComments);
+        }
+    }
+
+    const setWeaknessAppendixForIndexFactory = (index) => {
+        return (value) => {
+            let newWeaknessAppendix = [...weaknessAppendix];
+            newWeaknessAppendix[index] = value;
+            setWeaknessAppendix(newWeaknessAppendix);
         }
     }
 
@@ -115,6 +125,8 @@ function WeaknessAnnotation(props) {
                     weaknessComment={weaknessComments[weaknessIndex]}
                     setWeaknessBad={setWeaknessBadForIndexFactory(weaknessIndex)}
                     setWeaknessComment={setWeaknessCommentsForIndexFactory(weaknessIndex)}
+                    weaknessAppendix={weaknessAppendix[weaknessIndex]}
+                    setWeaknessAppendix={setWeaknessAppendixForIndexFactory(weaknessIndex)}
                 />
             </Box>
         </Box>
