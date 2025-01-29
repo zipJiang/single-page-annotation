@@ -62,7 +62,7 @@ function findSubArray(array, subArray) {
           }
         }
         if (start !== null) {
-          end = i + selectionTokens.length;
+          end = i + subArray.length;
         }
       }
     }
