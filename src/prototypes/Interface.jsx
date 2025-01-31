@@ -9,13 +9,13 @@ import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import { AppBar, Divider, Toolbar } from '@mui/material';
-import QuestionForm from './QuestionForm';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightPalette, darkPalette } from '../components/themes';
 import { useMediaQuery } from '@mui/material';
 import { parseCsvFromPublic } from '../components/utils';
-import SubmitPage from './SubmitPage';
 import ReviewerViewer from './ReviewViewer';
+import AddMore from './AddMore';
+import WeaknessCard from './WeaknessCard';
 
 
 function Interface(props) {
@@ -25,185 +25,103 @@ function Interface(props) {
         payload,
     } = props;
 
-    const newClaimTypes = new Array(payload.meta.claims.length);
-    for (let i = 0; i < payload.meta.claims.length; i++) {
-        newClaimTypes[i] = {
-            "Descriptive": false,
-            "Interpretive": false,
-            "Related Work": false,
-        }
-    }
-
-    const [claimTypes, setClaimTypes] = useState(
-        newClaimTypes
-    );
-    const [claimIndex, setClaimIndex] = useState(0);
     const [hoverWeakness, setHoverWeakness] = useState(-1);
-    const numberOfWeaknesses = payload.response['Weakness associated with claims'].length;
-    const [weaknessSelection, setWeaknessSelection] = useState(new Array(payload.meta.claims.length).fill(null)
-        .map(
-            () => new Array(numberOfWeaknesses).fill(null).map(() => 
-                ({
-                    "selected": false,
-                    // "subjectivity": 0,
-                    // "uncertainty": 0,
-                }))
-        )
-    );
-    
-    const [weaknessTypeAnnotation, setWeaknessTypeAnnotation] = useState(
-        new Array(numberOfWeaknesses).fill(null).map(() => ({
-            "subjectivity": 3,
-            "agreement": 3,
-            "weakness_type": {
-                "insufficient": false,
-                "contradictory": false,
-                "novelty": false,
-                "clarity": false,
-                "related_work": false,
-                "other": false
-            }
-        }))
-    );
-    const [weaknessBads, setWeaknessBads] = useState(new Array(numberOfWeaknesses).fill(false));
-    const [weaknessComments, setWeaknessComments] = useState(
-        new Array(numberOfWeaknesses).fill(null).map(() => (""))
-    );
-    const [weaknessIndex, setWeaknessIndex] = useState(0);
-    const [secondarySelection, setSecondarySelection] = useState(
-        new Array(payload.response['Weakness associated with claims'].length
-        ).fill(null).map(() => new Set())
-    );
+    const [focusIndex, setFocusIndex] = useState(-1);
+    const [weaknessDescs, setWeaknessDescs] = useState([]);
+    const [backgroundColors, setBackgroundColors] = useState([]);
+    const [selections, setSelections] = useState([]);
+    const [numAlreadyAdded, setNumAlreadyAdded] = useState(0);
 
     useEffect(() => {
-        const numberOfWeaknesses = payload.response['Weakness associated with claims'].length;
-        setWeaknessSelection(
-            new Array(payload.meta.claims.length).fill(null)
-            .map(
-                () => new Array(numberOfWeaknesses).fill(null).map(() => 
-                    ({
-                        "selected": false,
-                        // "subjectivity": 0,
-                        // "uncertainty": 0,
-                    }))
-            )
-        );
-        setWeaknessTypeAnnotation(
-            new Array(numberOfWeaknesses).fill(null).map(() => ({
-                "subjectivity": 3,
-                "agreement": 3,
-                "weakness_type": {
-                    "insufficient": false,
-                    "contradictory": false,
-                    "novelty": false,
-                    "clarity": false,
-                    "related_work": false,
-                    "other": false
-                }
-            }))
-        );
-        setClaimTypes(new Array(payload.meta.claims.length).fill(null).map(() => ({
-            "Descriptive": false,
-            "Interpretive": false,
-            "Related Work": false,
-        })));
-        setClaimIndex(0);
-        setWeaknessIndex(0);
-        setHoverWeakness(-1);
-        setSecondarySelection(new Array(numberOfWeaknesses).fill(null).map(() => new Set()));
-        setWeaknessBads(new Array(numberOfWeaknesses).fill(false));
-        setWeaknessComments(new Array(numberOfWeaknesses).fill(null).map(() => ("")));
     }, [payload]);
-
-    const setWeaknessSelectionFactory = (claimIndex) => {
-        return (value) => {
-            let newWeaknessSelection = [...weaknessSelection];
-            newWeaknessSelection[claimIndex] = value;
-            setWeaknessSelection(newWeaknessSelection);
-        }
-    }
-
-    const setClaimTypeFactory = (claimIndex) => {
-        return (value) => {
-            let newClaimTypes = [...claimTypes];
-            newClaimTypes[claimIndex] = value;
-            setClaimTypes(newClaimTypes);
-        }
-    }
 
     return (
         <Box>
             <Box sx={{
-                padding: "0px 0px 0px 0px",
-                width: "100%",
-            }}>
-                <div style={{
-                    borderColor: theme.palette.background.default,
-                    borderStyle: "solid",
-                    borderWidth: "0px 0px 10px 0px",
-                    boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
-                    position: "relative"
-                }}>
-                    <LinearProgress variant="determinate" value={(claimIndex + 1) / (payload.meta.claims.length + 1) * 100} sx={{
-                        height: "20px",
-                    }} />
-                </div>
-            </Box>
-            <Box sx={{
                 padding: "30px",
                 width: "100%",
-                height: "95vh",
-                overflow: "auto",
             }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <AbstractViewer payload={payload} />
-                        <ReviewerViewer payload={payload} hoverWeakness={hoverWeakness} theme={theme} />
+                        <Box sx={{
+                            height: "95vh",
+                            overflow: "auto",
+                        }}>
+                            <ReviewerViewer payload={payload} hoverWeakness={hoverWeakness} theme={theme} focusIndex={focusIndex}
+                                backgroundColors={backgroundColors}
+                                selections={selections}
+                                setSelections={setSelections}
+                            />
+                            <AbstractViewer payload={payload} />
+                            <Box sx={{
+                                padding: "30px"
+                            }}>
+                                <Button type="submit" variant="contained" color="primary" sx={{
+                                    width: "100%",
+                                    borderRadius: "10px",
+                                }}>
+                                    <Typography variant="h5" sx={{
+                                    }}>
+                                        Submit
+                                    </Typography>
+                                </Button>
+                            </Box>
+                        </Box>
                     </Grid>
                     <Grid item xs={6}>
-                        {(claimIndex >= payload.meta.claims.length && weaknessIndex >= numberOfWeaknesses ) ? <SubmitPage 
-                            hoverWeakness={hoverWeakness}
-                            setHoverWeakness={setHoverWeakness}
-                            weaknessIndex={weaknessIndex}
-                            setWeaknessIndex={setWeaknessIndex}
-                        /> : <QuestionForm
-                                theme={theme}
-                                payload={payload} 
-                                claimType={claimTypes[claimIndex]}
-                                setClaimType={setClaimTypeFactory(claimIndex)}
-                                weaknessSelection={weaknessSelection[claimIndex]}
-                                fullWeaknessSelection={weaknessSelection}
-                                setWeaknessSelection={setWeaknessSelectionFactory(claimIndex)}
-                                claimIndex={claimIndex}
-                                setClaimIndex={setClaimIndex}
-                                setHoverWeakness={setHoverWeakness}
-                                weaknessIndex={weaknessIndex}
-                                setWeaknessIndex={setWeaknessIndex}
-                                weaknessTypeAnnotation={weaknessTypeAnnotation}
-                                setWeaknessTypeAnnotation={setWeaknessTypeAnnotation}
-                                secondarySelection={secondarySelection}
-                                setSecondarySelection={setSecondarySelection}
-                                weaknessBads={weaknessBads}
-                                setWeaknessBads={setWeaknessBads}
-                                weaknessComments={weaknessComments}
-                                setWeaknessComments={setWeaknessComments}
-                            />
-                        }
+                        <Box sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "flex-start",
+                            flexWrap: "wrap",
+                            height: "95vh",
+                            overflow: "auto",
+                        }}>
+                            {weaknessDescs.map((desc, index) => {
+                                return (
+                                    <Box sx={{
+                                            order: index,
+                                        }}
+                                        key={"weakness-card-" + index}
+                                    >
+                                        <WeaknessCard
+                                            theme={theme}
+                                            index={index}
+                                            weakness={desc}
+                                            backgroundColor={backgroundColors[index]}
+                                            removeColor={() => {
+                                                const newColors = [...backgroundColors];
+                                                newColors.splice(index, 1);
+                                                setBackgroundColors(newColors);
+                                            }}
+                                            focused={index == focusIndex}
+                                            setFocusIndex={setFocusIndex}
+                                            setWeaknessDesc={(v) => {
+                                                const newWeaknessDescs = [...weaknessDescs];
+                                                newWeaknessDescs[index] = v;
+                                                setWeaknessDescs(newWeaknessDescs);
+                                            }}
+                                            setWeaknessDescs={setWeaknessDescs}
+                                            setHoverWeakness={setHoverWeakness}
+                                            setSelections={setSelections}
+                                        />
+                                    </Box>
+                                );
+                            })}
+                        </Box>
                     </Grid>
                 </Grid>
             </Box>
-            <input type="hidden" id="structuredOutput" name="claimStructuredOutput" value={JSON.stringify(weaknessSelection)} />
-            <input type="hidden" id="claimTypeAnnotation" name="claimTypeAnnotation" value={JSON.stringify(claimTypes)} />
-            <input type="hidden" id="weaknessTypeAnnotation" name="weaknessTypeAnnotation" value={JSON.stringify(weaknessTypeAnnotation)} />
-            <input type="hidden" id="secondarySelection" name="secondarySelection" value={JSON.stringify(
-                secondarySelection.map((set) => Array.from(set))
-            )} />
-            <input type="hidden" id="weaknessBad" name="weaknessBad" value={
-                JSON.stringify(weaknessBads)
-            } />
-            <input type="hidden" id="weaknessComments" name="weaknessComments" value={
-                JSON.stringify(weaknessComments)
-            } />
+            <AddMore
+                numAlreadyAdded={numAlreadyAdded}
+                weaknessDescs={weaknessDescs}
+                setNumAlreadyAdded={setNumAlreadyAdded}
+                setWeaknessDescs={setWeaknessDescs}
+                setFocusIndex={setFocusIndex}
+                setBackgroundColors={setBackgroundColors}
+            />
+            <input type="hidden" id="descriptions" name="descriptions" value={JSON.stringify(weaknessDescs)} />
+            <input type="hidden" id="selections" name="selections" value={JSON.stringify(selections)} />
         </Box>
     );
 }

@@ -14,6 +14,10 @@ function ReviewerViewer(props) {
         theme,
         payload,
         hoverWeakness,
+        focusIndex,
+        backgroundColors,
+        selections,
+        setSelections,
     } = props;
 
     const parentRef = useRef(null);
@@ -23,9 +27,6 @@ function ReviewerViewer(props) {
     let review_regex = /Review: (.*)/s;
     let review = payload.meta.review.replace(/\s+/g, ' ');
     review = review.match(review_regex)[1];
-    if (hoverWeakness != -1 && hoverWeakness < payload.response["Weakness associated with claims"].length) {
-        console.log(payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span']);
-    }
 
     return <NormalCard sx={{
         margin: "30px",
@@ -37,11 +38,22 @@ function ReviewerViewer(props) {
         }}
             ref={parentRef}
         >
+            <Typography sx={{
+                color: "grey"
+            }}>
+                <i>Please highlight the text that is relevant to the weakness below.</i>
+            </Typography>
+            <br />
             <TextBlock prefix="Review: " text={review} selection={
-                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ')
+                focusIndex == -1 ? null : selections[focusIndex]
             } parentRef={parentRef} bColor={
-                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness % candidateColorList.length]
-            } />
+                focusIndex == -1 ? null : backgroundColors[focusIndex]
+            } setSelection={(selection) => {
+                const newSelections = [...selections];
+                newSelections[focusIndex] = selection;
+                setSelections(newSelections);
+            }}
+            />
         </Box>
     </NormalCard>
 }

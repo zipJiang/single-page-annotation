@@ -30,7 +30,11 @@ function AbstractViewer(props) {
             >pdf</Button>
         </Typography>
         <br />
-        <TextBlock prefix="Abstract: " text={abstract} />
+        {/* <TextBlock prefix="Abstract: " text={abstract} /> */}
+        <Typography variant="weaknessDescription">
+            <b>Abstract: </b>
+            {abstract}
+        </Typography>
     </NormalCard>
 }
 
