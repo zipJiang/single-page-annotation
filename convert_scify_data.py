@@ -21,7 +21,7 @@ def main():
         writer.writeheader()
         with open(args.data_path, 'r', encoding='utf-8') as file_:
             for idx, (key, val) in enumerate(json.load(file_).items()):
-                val = {**val, **{"id": key, "pdf": pdf_data[val['meta']['id']]}}
+                val = {**val, **{"id": key, "pdf": pdf_data.get(val['meta']['id'], "")}}
                 writer.writerow({"payload": json.dumps(val), "id": idx})
                 
                 

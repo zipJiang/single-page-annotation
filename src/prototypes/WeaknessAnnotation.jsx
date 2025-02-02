@@ -91,6 +91,7 @@ function WeaknessAnnotation(props) {
                                 setWeaknessSelectionForIndex={() => {}}
                                 setHoverWeakness={setHoverWeakness}
                                 defaultWidth="100px"
+                                defaultHight="50px"
                                 fontVariant="tinyWeaknessDescription"
                                 bandPercentage={20}
                                 mouseEnterToHover={false}

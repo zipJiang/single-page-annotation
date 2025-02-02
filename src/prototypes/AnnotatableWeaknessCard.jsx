@@ -191,7 +191,7 @@ function AnnotatableWeaknessCard(props) {
                     <Box sx={{
                         padding: "10px",
                     }}>
-                        <TextBlock prefix="Weakness: " text={weakness.Reasoning} variant={fontVariant} />
+                        <TextBlock prefix="Weakness confidence score: " text={weakness["Weakness confidence score"]} variant={fontVariant} />
                     </Box>
                 </Box>
                 <Divider sx={{

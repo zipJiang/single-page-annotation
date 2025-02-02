@@ -19,6 +19,7 @@ function WeaknessCard(props) {
         setWeaknessSelectionForIndex,
         setHoverWeakness,
         defaultWidth = "300px",
+        defaultHight = "100px",
         fontVariant = "weaknessDescription",
         bandPercentage = 10,
         setWeaknessIndex = (v) => {},
@@ -106,7 +107,8 @@ function WeaknessCard(props) {
                     margin: "0px",
                     padding: "0px",
                     width: defaultWidth,
-                    height: defaultWidth,
+                    // height: defaultWidth,
+                    height: defaultHight,
                 }}
             >
                 <div style={{
@@ -126,7 +128,7 @@ function WeaknessCard(props) {
                         padding: "10px",
                         overflow: "auto",
                     }}>
-                        <TextBlock prefix="Weakness: " text={weakness.Reasoning} variant={fontVariant} />
+                        <TextBlock prefix="Weakness Confidence Score: " text={weakness["Weakness confidence score"]} variant={fontVariant} />
                     </Box>
                 </animated.div>
             </NormalCard>
