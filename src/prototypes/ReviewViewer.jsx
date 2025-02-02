@@ -38,7 +38,11 @@ function ReviewerViewer(props) {
             ref={parentRef}
         >
             <TextBlock prefix="Review: " text={review} selection={
-                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ')
+                // (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : payload.response["Weakness associated with claims"][hoverWeakness]['Weakness span'].replace(/\s+/g, ' ')
+                (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? null : ([
+                    payload.response["Weakness associated with claims"][hoverWeakness]['startOffset'],
+                    payload.response["Weakness associated with claims"][hoverWeakness]['endOffset']
+                ])
             } parentRef={parentRef} bColor={
                 (hoverWeakness == -1 || hoverWeakness >= payload.response["Weakness associated with claims"].length) ? theme.palette["card-bg-emph"].main : candidateColorList[hoverWeakness % candidateColorList.length]
             } />

@@ -34,7 +34,7 @@ function TextBlock(props) {
       }));
 
     const HighlightText = ({ text, selection }) => {
-        if (!selection || !text.includes(selection)) {
+        if (!selection) {
             return <Typography variant={variant} component={"div"}>
                 <b>{prefix}</b>
                 {text}
@@ -42,7 +42,16 @@ function TextBlock(props) {
         }
       
         // Split the text into three parts: before, the match, and after
-        const parts = text.split(selection);
+        // const parts = text.split(selection);
+        let [startOffset, endOffset] = selection;
+
+        const parts = [
+            text.substring(0, startOffset),
+            text.substring(startOffset, endOffset),
+            text.substring(endOffset)
+        ];
+
+        // console.log(parts);
       
         return (
             <Typography variant={variant} component={"div"}>
@@ -51,8 +60,8 @@ function TextBlock(props) {
                 <Highlight 
                     ref={targetRef}
                     id="highlighted-review"
-                >{selection}</Highlight>
-                {parts[1]}
+                >{parts[1]}</Highlight>
+                {parts[2]}
             </Typography>
         );
     };
