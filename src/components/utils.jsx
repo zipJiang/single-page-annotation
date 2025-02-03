@@ -43,4 +43,33 @@ function applyProps(Fn, props) {
     return (e = {}) => <Fn {...e} {...props} />
 }
 
-export { applyProps, parseCsvFromPublic };
+function findSubArray(array, subArray) {
+  /**
+   * If subArray is in array (by element-wise equality (===)), return two-element array consisting
+   * of start index (inclusive) and end index (exclusive) of subArray in array.  Otherwise, return
+   * undefined.
+   */
+  let start = null;
+  let end = null;
+  if (array.length && subArray.length) {
+    for (let i = 0; i < array.length; ++i) {
+      if (array[i] === subArray[0]) {
+        start = i;
+        for (let offset = 0; offset < subArray.length; ++offset) {
+          if (array[i + offset] !== subArray[offset]) {
+            start = null;
+            break;
+          }
+        }
+        if (start !== null) {
+          end = i + subArray.length;
+        }
+      }
+    }
+  }
+  return (start !== null && end !== null)
+    ? [start, end]
+    : undefined;
+}
+
+export { applyProps, parseCsvFromPublic, findSubArray };

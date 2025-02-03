@@ -1,10 +1,11 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Box from "@mui/material/Box";
-import TextBlock from "./TextBlock";
+import SelectableTextBlock from "./SelectableTextBlock";
 import { Grid } from "@mui/material";
 import { NormalCard } from "../components/Cards";
+import { findSubArray } from "../components/utils";
 import { Height } from "@mui/icons-material";
 import { candidateColorList } from "./ckp";
 
